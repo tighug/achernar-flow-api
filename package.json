@@ -1,0 +1,8 @@
+{
+  "name": "achernar-flow-api",
+  "version": "0.1.0",
+  "main": "index.js",
+  "repository": "https://github.com/tighug/achernar-flow-api",
+  "author": "tighug <kapuriko123@gmail.com>",
+  "license": "MIT"
+}
