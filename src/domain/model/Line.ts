@@ -1,4 +1,4 @@
-export class Wire {
+export class Line {
   readonly id: number;
   readonly feederId: number;
   readonly prevJointId: number;
@@ -13,7 +13,7 @@ export class Wire {
     return (this.zOhmPerKm * this.lenthM) / 1000;
   }
 
-  constructor(props: Wire) {
+  constructor(props: Line) {
     this.id = props.id;
     this.feederId = props.feederId;
     this.prevJointId = props.prevJointId;
