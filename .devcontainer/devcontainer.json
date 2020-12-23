@@ -1,0 +1,24 @@
+{
+  "name": "Achernar Flow API",
+  "build": {
+    "dockerfile": "Dockerfile",
+    "target": "development",
+    "context": "..",
+    "args": {
+      "NODE_VERSION": "14"
+    }
+  },
+  "settings": {
+    "terminal.integrated.shell.linux": "/bin/zsh"
+  },
+  "extensions": [
+    "esbenp.prettier-vscode",
+    "editorconfig.editorconfig",
+    "yzhang.markdown-all-in-one",
+    "davidanson.vscode-markdownlint",
+    "eg2.vscode-npm-script",
+    "christian-kohler.npm-intellisense"
+  ],
+  "forwardPorts": [8000]
+  // "containerUser": "node"
+}
