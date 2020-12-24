@@ -1,14 +1,16 @@
+import { Feeder } from "./Feeder";
+
 export class Joint {
   readonly id: number;
-  readonly feederId: number;
+  readonly feeder: Feeder;
   readonly num: number;
   readonly posX: number;
   readonly posY: number;
 
-  constructor(props: Joint){
+  constructor(props: Joint) {
     this.id = props.id;
-    this.feederId =props.feederId
-    this.num =props.num;
+    this.feeder = props.feeder;
+    this.num = props.num;
     this.posX = props.posX;
     this.posY = props.posY;
   }
