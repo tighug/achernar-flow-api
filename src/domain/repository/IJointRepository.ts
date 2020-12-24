@@ -1,5 +1,6 @@
+import { Feeder } from "../model/Feeder";
 import { Joint } from "../model/Joint";
 
 export interface IJointRepository {
-  listByFeeder(id: number): Promise<Joint[]>;
+  listByFeeder(feeder: Feeder): Promise<Joint[]>;
 }
