@@ -2,41 +2,41 @@ import { EntitySchema } from "typeorm";
 import { Line } from "../../../domain/model/Line";
 
 export const LineEntity = new EntitySchema<Line>({
-  name: "line",
+  name: "lines",
   columns: {
     id: {
-      type: Number,
+      type: "int",
       primary: true,
       generated: true,
     },
     lengthM: {
-      type: Number,
+      type: "float",
     },
     hasLoad: {
-      type: Boolean,
+      type: "boolean",
     },
     cableType: {
-      type: String,
+      type: "text",
     },
     rOhmPerKm: {
-      type: Number,
+      type: "float",
     },
     zOhmPerKm: {
-      type: Number,
+      type: "float",
     },
   },
   relations: {
     feeder: {
       type: "many-to-one",
-      target: "feeder",
+      target: "feeders",
     },
     prevJoint: {
       type: "many-to-one",
-      target: "joint",
+      target: "joints",
     },
     nextJoint: {
       type: "many-to-one",
-      target: "joint",
+      target: "joints",
     },
   },
 });
