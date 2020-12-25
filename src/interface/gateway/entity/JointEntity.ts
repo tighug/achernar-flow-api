@@ -2,7 +2,7 @@ import { EntitySchema } from "typeorm";
 import { Joint } from "../../../domain/model/Joint";
 
 export const JointEntity = new EntitySchema<Joint>({
-  name: "joint",
+  name: "joints",
   columns: {
     id: {
       type: Number,
@@ -13,16 +13,16 @@ export const JointEntity = new EntitySchema<Joint>({
       type: "int",
     },
     posX: {
-      type: Number,
+      type: "float",
     },
     posY: {
-      type: Number,
+      type: "float",
     },
   },
   relations: {
     feeder: {
       type: "many-to-one",
-      target: "feeder",
+      target: "feeders",
     },
   },
 });

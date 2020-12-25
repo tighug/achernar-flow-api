@@ -2,10 +2,10 @@ import { EntitySchema } from "typeorm";
 import { Feeder } from "../../../domain/model/Feeder";
 
 export const FeederEntity = new EntitySchema<Feeder>({
-  name: "feeder",
+  name: "feeders",
   columns: {
     id: {
-      type: Number,
+      type: "int",
       primary: true,
       generated: true,
     },
