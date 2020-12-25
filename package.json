@@ -5,6 +5,11 @@
   "repository": "https://github.com/tighug/achernar-flow-api",
   "author": "tighug <kapuriko123@gmail.com>",
   "license": "MIT",
+  "scripts": {
+    "dev": "cross-env NODE_ENV=development ts-node-dev src/infrastructure/Server.ts",
+    "build": "tsc",
+    "start": "cross-env NODE_ENV=production node dist/infrastructure/Server.js"
+  },
   "devDependencies": {
     "@types/express": "^4.17.9",
     "@types/http-errors": "^1.8.0",
@@ -26,6 +31,7 @@
     "http-errors": "^1.8.0",
     "mysql2": "^2.2.5",
     "typeorm": "^0.2.29",
+    "typeorm-naming-strategies": "^2.0.0",
     "validator": "^13.5.2"
   }
 }
