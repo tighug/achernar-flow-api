@@ -19,6 +19,9 @@
     "eg2.vscode-npm-script",
     "christian-kohler.npm-intellisense"
   ],
-  "forwardPorts": [8000]
-  // "containerUser": "node"
+  "forwardPorts": [8000],
+  "mounts": [
+    "source=achernar-flow-api-node_modules,target=${containerWorkspaceFolder}/node_modules,type=volume"
+  ]
+  // "containerUser": "node",
 }
