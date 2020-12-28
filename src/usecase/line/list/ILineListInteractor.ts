@@ -1,5 +1,6 @@
-import { LineListOutputData } from "./LineListOutputData";
+import { LineListInput } from "./LineListInput";
+import { LineListOutput } from "./LineListOutput";
 
 export interface ILineListInteractor {
-  handle(feederId: number): Promise<LineListOutputData>;
+  handle(input: LineListInput): Promise<LineListOutput>;
 }

@@ -2,13 +2,13 @@ import { NextFunction, Request, Response } from "express";
 import validator from "validator";
 import createError from "http-errors";
 import { ILineListInteractor } from "../../usecase/line/list/ILineListInteractor";
-import { LinePresenter } from "../presenter/line/LinePresetner";
+import { LineSerializer } from "../serializer/line/LineSerializer";
 
 export class LineController {
-  private readonly linePresenter: LinePresenter;
+  private readonly linePresenter: LineSerializer;
 
   constructor(private readonly lineListInteractor: ILineListInteractor) {
-    this.linePresenter = new LinePresenter();
+    this.linePresenter = new LineSerializer();
   }
 
   async list(req: Request, res: Response, next: NextFunction): Promise<void> {
@@ -22,9 +22,9 @@ export class LineController {
       if (!validator.isInt(feederId))
         throw new createError.BadRequest("feederId must be integer.");
 
-      const lines = await this.lineListInteractor.handle(Number(feederId));
-      const linesRO = this.linePresenter.serializeArray(lines);
-
+      const input = { feederId: Number(feederId) };
+      const lines = await this.lineListInteractor.handle(input);
+      const linesRO = this.linePresenter.serialize(lines);
       res.json(linesRO);
     } catch (err) {
       next(err);

@@ -1,11 +1,11 @@
 import { Request, Response } from "express";
-import { ErrorPresenter } from "../presenter/error/ErrorPresenter";
+import { ErrorSerializer } from "../serializer/error/ErrorSerializer";
 
 export class ErrorController {
-  private readonly errorPresenter: ErrorPresenter;
+  private readonly errorPresenter: ErrorSerializer;
 
   constructor() {
-    this.errorPresenter = new ErrorPresenter();
+    this.errorPresenter = new ErrorSerializer();
   }
 
   async get(err: Error, req: Request, res: Response): Promise<void> {

@@ -1,7 +1,7 @@
 import { isHttpError } from "http-errors";
 import { ErrorRO } from "./ErrorRO";
 
-export class ErrorPresenter {
+export class ErrorSerializer {
   serialize(err: Error): ErrorRO {
     return {
       error: {

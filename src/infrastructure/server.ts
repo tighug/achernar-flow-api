@@ -1,5 +1,5 @@
 import express from "express";
-import router from "./Router";
+import router from "./router";
 import { notFoundError, errorHandler } from "./ErrorHandler";
 
 const PORT = process.env.PORT || 8000;
