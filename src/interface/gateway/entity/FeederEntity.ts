@@ -15,11 +15,5 @@ export const FeederEntity = new EntitySchema<Feeder>({
     feederNum: {
       type: "int",
     },
-    jointCount: {
-      type: "int",
-    },
-    houseCount: {
-      type: "int",
-    },
   },
 });

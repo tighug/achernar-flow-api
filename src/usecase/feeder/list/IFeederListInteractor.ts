@@ -1,5 +1,5 @@
-import { FeederListOutputData } from "./FeederListOutputData";
+import { FeederListOutput } from "./FeederListOutput";
 
 export interface IFeederListInteractor {
-  handle(): Promise<FeederListOutputData>;
+  handle(): Promise<FeederListOutput>;
 }

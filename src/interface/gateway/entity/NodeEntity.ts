@@ -2,7 +2,7 @@ import { EntitySchema } from "typeorm";
 import { Node } from "../../../domain/model/Node";
 
 export const NodeEntity = new EntitySchema<Node>({
-  name: "node",
+  name: "nodes",
   columns: {
     id: {
       type: Number,

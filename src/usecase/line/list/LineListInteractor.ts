@@ -1,11 +1,12 @@
 import { ILineRepository } from "../../../domain/repository/ILineRepository";
 import { ILineListInteractor } from "./ILineListInteractor";
-import { LineListOutputData } from "./LineListOutputData";
+import { LineListInput } from "./LineListInput";
+import { LineListOutput } from "./LineListOutput";
 
 export class LineListInteractor implements ILineListInteractor {
   constructor(private readonly lineRepository: ILineRepository) {}
 
-  async handle(feederId: number): Promise<LineListOutputData> {
-    return this.lineRepository.listByFeederId(feederId);
+  async handle(input: LineListInput): Promise<LineListOutput> {
+    return this.lineRepository.listByFeederId(input.feederId);
   }
 }

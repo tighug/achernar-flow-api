@@ -1,5 +1,6 @@
-import { NodeListOutputData } from "./NodeListOutputData";
+import { NodeListInput } from "./NodeListInput";
+import { NodeListOutput } from "./NodeListOutput";
 
 export interface INodeListInteractor {
-  handle(feederId: number): Promise<NodeListOutputData>;
+  handle(input: NodeListInput): Promise<NodeListOutput>;
 }

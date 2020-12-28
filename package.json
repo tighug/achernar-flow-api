@@ -6,9 +6,9 @@
   "author": "tighug <kapuriko123@gmail.com>",
   "license": "MIT",
   "scripts": {
-    "dev": "cross-env NODE_ENV=development ts-node-dev src/infrastructure/Server.ts",
+    "dev": "cross-env NODE_ENV=development ts-node-dev src/infrastructure/server.ts",
     "build": "tsc",
-    "start": "cross-env NODE_ENV=production node dist/infrastructure/Server.js"
+    "start": "cross-env NODE_ENV=production node dist/infrastructure/server.js"
   },
   "devDependencies": {
     "@types/express": "^4.17.9",

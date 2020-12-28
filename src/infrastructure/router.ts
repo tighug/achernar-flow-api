@@ -33,14 +33,14 @@ createConnection("development").then((connection) => {
   );
 
   router.get(
-    "/joints",
+    "/nodes",
     async (req: Request, res: Response, next: NextFunction) => {
       await nodeController.list(req, res, next);
     }
   );
 
   router.get(
-    "/nodes",
+    "/lines",
     async (req: Request, res: Response, next: NextFunction) => {
       await lineController.list(req, res, next);
     }
