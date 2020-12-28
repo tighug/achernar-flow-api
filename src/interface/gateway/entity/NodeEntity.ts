@@ -1,8 +1,8 @@
 import { EntitySchema } from "typeorm";
-import { Joint } from "../../../domain/model/Joint";
+import { Node } from "../../../domain/model/Node";
 
-export const JointEntity = new EntitySchema<Joint>({
-  name: "joints",
+export const NodeEntity = new EntitySchema<Node>({
+  name: "node",
   columns: {
     id: {
       type: Number,

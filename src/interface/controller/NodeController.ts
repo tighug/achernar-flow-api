@@ -1,14 +1,14 @@
 import { NextFunction, Request, Response } from "express";
 import createHttpError from "http-errors";
 import validator from "validator";
-import { IJointListInteractor } from "../../usecase/joint/list/IJointListInteractor";
-import { JointPresenter } from "../presenter/joint/JointPresenter";
+import { INodeListInteractor } from "../../usecase/node/list/INodeListInteractor";
+import { NodePresenter } from "../presenter/node/NodePresenter";
 
-export class JointController {
-  private readonly jointPresenter: JointPresenter;
+export class NodeController {
+  private readonly nodePresenter: NodePresenter;
 
-  constructor(private readonly jointListInteractor: IJointListInteractor) {
-    this.jointPresenter = new JointPresenter();
+  constructor(private readonly nodeListInteractor: INodeListInteractor) {
+    this.nodePresenter = new NodePresenter();
   }
 
   async list(req: Request, res: Response, next: NextFunction): Promise<void> {
@@ -22,10 +22,10 @@ export class JointController {
       if (!validator.isInt(feederId))
         throw new createHttpError.BadRequest("feederId must be integer.");
 
-      const joints = await this.jointListInteractor.handle(Number(feederId));
-      const jointsRO = this.jointPresenter.serializeArray(joints);
+      const nodes = await this.nodeListInteractor.handle(Number(feederId));
+      const nodesRO = this.nodePresenter.serializeArray(nodes);
 
-      res.json(jointsRO);
+      res.json(nodesRO);
     } catch (err) {
       next(err);
     }

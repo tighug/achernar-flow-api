@@ -12,16 +12,13 @@ export const LineEntity = new EntitySchema<Line>({
     lengthM: {
       type: "float",
     },
-    hasLoad: {
-      type: "boolean",
-    },
-    cableType: {
+    code: {
       type: "text",
     },
     rOhmPerKm: {
       type: "float",
     },
-    zOhmPerKm: {
+    xOhmPerKm: {
       type: "float",
     },
   },
@@ -30,13 +27,13 @@ export const LineEntity = new EntitySchema<Line>({
       type: "many-to-one",
       target: "feeders",
     },
-    prevJoint: {
+    prevNode: {
       type: "many-to-one",
-      target: "joints",
+      target: "nodes",
     },
-    nextJoint: {
+    nextNode: {
       type: "many-to-one",
-      target: "joints",
+      target: "nodes",
     },
   },
 });

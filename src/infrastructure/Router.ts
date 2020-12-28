@@ -1,28 +1,28 @@
 import express, { NextFunction, Request, Response } from "express";
 import { createConnection } from "typeorm";
 import { FeederController } from "../interface/controller/FeederController";
-import { JointController } from "../interface/controller/JointController";
+import { NodeController } from "../interface/controller/NodeController";
 import { LineController } from "../interface/controller/LineController";
 import { FeederRepository } from "../interface/gateway/FeederRepository";
-import { JointRepository } from "../interface/gateway/JointRepository";
+import { NodeRepository } from "../interface/gateway/NodeRepository";
 import { LineRepository } from "../interface/gateway/LineRepository";
 import { FeederListInteractor } from "../usecase/feeder/list/FeederListInteractor";
-import { JointListInteractor } from "../usecase/joint/list/JointListInteractor";
+import { NodeListInteractor } from "../usecase/node/list/NodeListInteractor";
 import { LineListInteractor } from "../usecase/line/list/LineListInteractor";
 
 const router = express.Router();
 
 createConnection("development").then((connection) => {
   const feederRepository = new FeederRepository(connection);
-  const jointRepository = new JointRepository(connection);
+  const nodeRepository = new NodeRepository(connection);
   const lineRepository = new LineRepository(connection);
 
   const feederList = new FeederListInteractor(feederRepository);
-  const jointList = new JointListInteractor(jointRepository);
+  const nodeList = new NodeListInteractor(nodeRepository);
   const lineList = new LineListInteractor(lineRepository);
 
   const feederController = new FeederController(feederList);
-  const jointController = new JointController(jointList);
+  const nodeController = new NodeController(nodeList);
   const lineController = new LineController(lineList);
 
   router.get(
@@ -35,12 +35,12 @@ createConnection("development").then((connection) => {
   router.get(
     "/joints",
     async (req: Request, res: Response, next: NextFunction) => {
-      await jointController.list(req, res, next);
+      await nodeController.list(req, res, next);
     }
   );
 
   router.get(
-    "/lines",
+    "/nodes",
     async (req: Request, res: Response, next: NextFunction) => {
       await lineController.list(req, res, next);
     }

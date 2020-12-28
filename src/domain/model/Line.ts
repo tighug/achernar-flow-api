@@ -1,30 +1,26 @@
 import { Feeder } from "./Feeder";
-import { Joint } from "./Joint";
+import { Node } from "./Node";
 
 export class Line {
   readonly id: number;
   readonly feeder: Feeder;
-  readonly prevJoint: Joint;
-  readonly nextJoint: Joint;
+  readonly prevNode: Node;
+  readonly nextNode: Node;
   readonly lengthM: number;
-  readonly hasLoad: boolean;
-  readonly cableType: string;
+  readonly phase: number;
+  readonly code: string;
   readonly rOhmPerKm: number;
-  readonly zOhmPerKm: number;
-
-  get zOhm(): number {
-    return (this.zOhmPerKm * this.lengthM) / 1000;
-  }
+  readonly xOhmPerKm: number;
 
   constructor(props: Line) {
     this.id = props.id;
     this.feeder = props.feeder;
-    this.prevJoint = props.prevJoint;
-    this.nextJoint = props.nextJoint;
+    this.prevNode = props.prevNode;
+    this.nextNode = props.nextNode;
     this.lengthM = props.lengthM;
-    this.hasLoad = props.hasLoad;
-    this.cableType = props.cableType;
+    this.phase = props.phase;
+    this.code = props.code;
     this.rOhmPerKm = props.rOhmPerKm;
-    this.zOhmPerKm = props.zOhmPerKm;
+    this.xOhmPerKm = props.xOhmPerKm;
   }
 }
