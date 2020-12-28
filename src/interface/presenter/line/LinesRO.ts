@@ -1,13 +1,13 @@
 import { Feeder } from "../../../domain/model/Feeder";
-import { Joint } from "../../../domain/model/Joint";
+import { Node } from "../../../domain/model/Node";
 
 export type LinesRO = {
   readonly lineCount: number;
   readonly lines: {
     readonly id: number;
     readonly feeder: Feeder;
-    readonly prevJoint: Joint;
-    readonly nextJoint: Joint;
+    readonly prevJoint: Node;
+    readonly nextJoint: Node;
     readonly lengthM: number;
     readonly hasLoad: boolean;
     readonly cableType: string;

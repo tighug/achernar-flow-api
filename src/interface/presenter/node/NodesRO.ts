@@ -1,8 +1,8 @@
 import { Feeder } from "../../../domain/model/Feeder";
 
-export type JointsRO = {
-  readonly jointCount: number;
-  readonly joints: {
+export type NodesRO = {
+  readonly nodeCount: number;
+  readonly nodes: {
     readonly id: number;
     readonly feeder: Feeder;
     readonly num: number;
