@@ -1,0 +1,46 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DB_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+model Feeder {
+  id         Int    @id @default(autoincrement())
+  networkNum Int
+  feederNum  Int
+  nodes      Node[]
+  lines      Line[]
+}
+
+model Node {
+  id        Int     @id @default(autoincrement())
+  feeder    Feeder  @relation(fields: [feederId], references: [id])
+  feederId  Int
+  num       Int
+  posX      Float
+  posY      Float
+  hasLoad   Boolean
+  nextLines Line[]  @relation("PrevNode")
+  prevLines Line[]  @relation("NextNode")
+}
+
+model Line {
+  id         Int    @id @default(autoincrement())
+  feeder     Feeder @relation(fields: [feederId], references: [id])
+  feederId   Int
+  prevNode   Node   @relation("PrevNode", fields: [prevNodeId], references: [id])
+  prevNodeId Int
+  nextNode   Node   @relation("NextNode", fields: [nextNodeId], references: [id])
+  nextNodeId Int
+  lengthM    Float
+  phase      Int
+  code       String
+  rOhmPerKm  Float
+  xOhmPerKm  Float
+}

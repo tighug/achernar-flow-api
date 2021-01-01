@@ -1,20 +1,15 @@
-import { Connection, Repository } from "typeorm";
+import { PrismaClient } from "@prisma/client";
 import { Feeder } from "../../domain/model/Feeder";
 import { IFeederRepository } from "../../domain/repository/IFeederRepository";
-import { FeederEntity } from "./entity/FeederEntity";
 
 export class FeederRepository implements IFeederRepository {
-  private readonly repository: Repository<Feeder>;
-
-  constructor(connection: Connection) {
-    this.repository = connection.getRepository<Feeder>(FeederEntity);
-  }
+  constructor(private prisma: PrismaClient) {}
 
   findAll(): Promise<Feeder[]> {
-    return this.repository.find();
+    return this.prisma.feeder.findMany();
   }
 
-  find(id: number): Promise<Feeder | undefined> {
-    return this.repository.findOne(id);
+  find(id: number): Promise<Feeder | null> {
+    return this.prisma.feeder.findUnique({ where: { id } });
   }
 }

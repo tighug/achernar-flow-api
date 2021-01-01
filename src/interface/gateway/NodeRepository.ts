@@ -1,16 +1,14 @@
-import { Connection, Repository } from "typeorm";
+import { PrismaClient } from "@prisma/client";
 import { Node } from "../../domain/model/Node";
 import { INodeRepository } from "../../domain/repository/INodeRepository";
-import { NodeEntity } from "./entity/NodeEntity";
 
 export class NodeRepository implements INodeRepository {
-  private readonly repository: Repository<Node>;
-
-  constructor(connection: Connection) {
-    this.repository = connection.getRepository<Node>(NodeEntity);
-  }
+  constructor(private prisma: PrismaClient) {}
 
   listByFeederId(feederId: number): Promise<Node[]> {
-    return this.repository.find({ feeder: { id: feederId } });
+    return this.prisma.node.findMany({
+      where: { feederId },
+      include: { feeder: true },
+    });
   }
 }
