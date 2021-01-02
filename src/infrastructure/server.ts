@@ -2,7 +2,7 @@ import express from "express";
 import router from "./router";
 import { notFoundError, errorHandler } from "./ErrorHandler";
 
-const PORT = process.env.PORT || 8000;
+const PORT = 8000;
 const app = express();
 
 app.use(express.json());

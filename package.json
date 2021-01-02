@@ -8,7 +8,10 @@
   "scripts": {
     "dev": "cross-env NODE_ENV=development ts-node-dev src/infrastructure/server.ts",
     "build": "tsc",
-    "start": "cross-env NODE_ENV=production node dist/infrastructure/server.js"
+    "start": "cross-env NODE_ENV=production node dist/infrastructure/server.js",
+    "generate": "prisma generate",
+    "migrate": "prisma migrate dev --name init --create-only --preview-feature",
+    "deploy": "prisma migrate deploy --preview-feature"
   },
   "devDependencies": {
     "@prisma/cli": "^2.13.1",
