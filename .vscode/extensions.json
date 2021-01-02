@@ -6,7 +6,10 @@
     "davidanson.vscode-markdownlint",
     "eg2.vscode-npm-script",
     "christian-kohler.npm-intellisense",
-    "dbaeumer.vscode-eslint"
+    "dbaeumer.vscode-eslint",
+    "prisma.prisma",
+    "mikestead.dotenv",
+    "ms-azuretools.vscode-docker"
   ],
   "unwantedRecommendations": []
 }
