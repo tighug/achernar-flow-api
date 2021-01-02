@@ -1,0 +1,4 @@
+USE flow;
+LOAD DATA LOCAL INFILE "/docker-entrypoint-initdb.d/Feeders.csv" INTO TABLE Feeder FIELDS TERMINATED BY "," ENCLOSED BY "" LINES TERMINATED BY "\n";
+LOAD DATA LOCAL INFILE "/docker-entrypoint-initdb.d/Nodes.csv" INTO TABLE Node FIELDS TERMINATED BY "," ENCLOSED BY "" LINES TERMINATED BY "\n";
+LOAD DATA LOCAL INFILE "/docker-entrypoint-initdb.d/Lines.csv" INTO TABLE Line FIELDS TERMINATED BY "," ENCLOSED BY "" LINES TERMINATED BY "\n";

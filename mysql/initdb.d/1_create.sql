@@ -1,0 +1,40 @@
+CREATE DATABASE IF NOT EXISTS flow;
+USE flow;
+-- CreateTable
+CREATE TABLE `Feeder` (
+    `id` INT NOT NULL AUTO_INCREMENT,
+    `networkNum` INT NOT NULL,
+    `feederNum` INT NOT NULL,
+    PRIMARY KEY (`id`)
+) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+-- CreateTable
+CREATE TABLE `Node` (
+    `id` INT NOT NULL AUTO_INCREMENT,
+    `feederId` INT NOT NULL,
+    `num` INT NOT NULL,
+    `posX` DECIMAL(65, 30) NOT NULL,
+    `posY` DECIMAL(65, 30) NOT NULL,
+    `hasLoad` BOOLEAN NOT NULL,
+    PRIMARY KEY (`id`)
+) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+-- CreateTable
+CREATE TABLE `Line` (
+    `id` INT NOT NULL AUTO_INCREMENT,
+    `feederId` INT NOT NULL,
+    `prevNodeId` INT NOT NULL,
+    `nextNodeId` INT NOT NULL,
+    `lengthM` DECIMAL(65, 30) NOT NULL,
+    `phase` INT NOT NULL,
+    `code` VARCHAR(191) NOT NULL,
+    `rOhmPerKm` DECIMAL(65, 30) NOT NULL,
+    `xOhmPerKm` DECIMAL(65, 30) NOT NULL,
+    PRIMARY KEY (`id`)
+) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+ALTER TABLE `Node`
+ADD FOREIGN KEY (`feederId`) REFERENCES `Feeder`(`id`) ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE `Line`
+ADD FOREIGN KEY (`feederId`) REFERENCES `Feeder`(`id`) ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE `Line`
+ADD FOREIGN KEY (`prevNodeId`) REFERENCES `Node`(`id`) ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE `Line`
+ADD FOREIGN KEY (`nextNodeId`) REFERENCES `Node`(`id`) ON DELETE CASCADE ON UPDATE CASCADE;
