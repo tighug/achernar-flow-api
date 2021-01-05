@@ -5,10 +5,10 @@ import { ILineListInteractor } from "../../usecase/line/list/ILineListInteractor
 import { LineSerializer } from "../serializer/line/LineSerializer";
 
 export class LineController {
-  private readonly linePresenter: LineSerializer;
+  private readonly lineSerializer: LineSerializer;
 
   constructor(private readonly lineListInteractor: ILineListInteractor) {
-    this.linePresenter = new LineSerializer();
+    this.lineSerializer = new LineSerializer();
   }
 
   async list(req: Request, res: Response, next: NextFunction): Promise<void> {
@@ -24,7 +24,7 @@ export class LineController {
 
       const input = { feederId: Number(feederId) };
       const lines = await this.lineListInteractor.handle(input);
-      const linesRO = this.linePresenter.serialize(lines);
+      const linesRO = this.lineSerializer.serialize(lines);
       res.json(linesRO);
     } catch (err) {
       next(err);

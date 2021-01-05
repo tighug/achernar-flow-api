@@ -6,7 +6,7 @@ import { NodeListOutput } from "./NodeListOutput";
 export class NodeListInteractor implements INodeListInteractor {
   constructor(private readonly nodeRepository: INodeRepository) {}
 
-  async handle(input: NodeListInput): Promise<NodeListOutput> {
+  handle(input: NodeListInput): Promise<NodeListOutput> {
     return this.nodeRepository.listByFeederId(input.feederId);
   }
 }

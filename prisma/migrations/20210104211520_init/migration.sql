@@ -1,5 +1,3 @@
-CREATE DATABASE IF NOT EXISTS flow;
-USE flow;
 -- CreateTable
 CREATE TABLE `feeders` (
     `id` INT NOT NULL AUTO_INCREMENT,
