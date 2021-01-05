@@ -6,7 +6,7 @@ import { LineListOutput } from "./LineListOutput";
 export class LineListInteractor implements ILineListInteractor {
   constructor(private readonly lineRepository: ILineRepository) {}
 
-  async handle(input: LineListInput): Promise<LineListOutput> {
+  handle(input: LineListInput): Promise<LineListOutput> {
     return this.lineRepository.listByFeederId(input.feederId);
   }
 }

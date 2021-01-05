@@ -5,7 +5,7 @@ import { IFeederListInteractor } from "./IFeederListInteractor";
 export class FeederListInteractor implements IFeederListInteractor {
   constructor(private readonly feederRepository: IFeederRepository) {}
 
-  async handle(): Promise<FeederListOutput> {
+  handle(): Promise<FeederListOutput> {
     return this.feederRepository.findAll();
   }
 }
