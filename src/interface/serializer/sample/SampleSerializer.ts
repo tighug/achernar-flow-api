@@ -1,25 +1,23 @@
 /* eslint-disable @typescript-eslint/explicit-module-boundary-types */
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { LoadBaseRO } from "./LoadBaseRO";
-import { LoadRO } from "./LoadRO";
-import { LoadsRO } from "./LoadsRO";
+import { SampleBaseRO, SampleRO, SamplesRO } from "./SampleRO";
 
-export class LoadSerializer {
-  serialize(data: any): LoadRO | LoadsRO {
+export class SampleSerializer {
+  serialize(data: any): SampleRO | SamplesRO {
     if (!data) throw new Error("data must not be undefined.");
     if (Array.isArray(data)) {
       const loads = data.map(this.serializeSingle);
       return {
-        loadCount: loads.length,
-        loads,
+        sampleCount: loads.length,
+        samples: loads,
       };
     }
     return {
-      load: this.serializeSingle(data),
+      sample: this.serializeSingle(data),
     };
   }
 
-  private serializeSingle(line: any): LoadBaseRO {
+  private serializeSingle(line: any): SampleBaseRO {
     return { ...line };
   }
 }

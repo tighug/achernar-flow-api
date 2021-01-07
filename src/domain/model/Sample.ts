@@ -1,4 +1,4 @@
-export class Load {
+export class Sample {
   readonly id: number;
   readonly num: number;
   readonly hour: number;
@@ -6,7 +6,7 @@ export class Load {
   readonly val: number;
   readonly season: string;
 
-  constructor(props: LoadProps) {
+  constructor(props: SampleProps) {
     this.id = props.id;
     this.num = props.num;
     this.hour = props.hour;
@@ -16,4 +16,4 @@ export class Load {
   }
 }
 
-type LoadProps = Required<Load>;
+type SampleProps = Required<Sample>;

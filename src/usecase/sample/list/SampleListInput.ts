@@ -1,5 +1,6 @@
-export type LoadListInput = {
+export type SampleListInput = {
   hour: number;
   minute: number;
   season: string;
+  type: string;
 };

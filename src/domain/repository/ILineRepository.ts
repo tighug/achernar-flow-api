@@ -1,5 +1,5 @@
 import { Line } from "../model/Line";
 
 export interface ILineRepository {
-  listByFeederId(feederId: number): Promise<Line[]>;
+  findByFeederId(feederId: number): Promise<Line[]>;
 }
