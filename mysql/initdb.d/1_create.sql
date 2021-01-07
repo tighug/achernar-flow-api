@@ -8,7 +8,6 @@ CREATE TABLE `feeders` (
 
     PRIMARY KEY (`id`)
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
-
 -- CreateTable
 CREATE TABLE `nodes` (
     `id` INT NOT NULL AUTO_INCREMENT,
@@ -20,11 +19,9 @@ CREATE TABLE `nodes` (
 
     PRIMARY KEY (`id`)
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
-
 -- CreateTable
 CREATE TABLE `lines` (
     `id` INT NOT NULL AUTO_INCREMENT,
-    `feederId` INT NOT NULL,
     `prevNodeId` INT NOT NULL,
     `nextNodeId` INT NOT NULL,
     `lengthM` DECIMAL(65,30) NOT NULL,
@@ -35,9 +32,30 @@ CREATE TABLE `lines` (
 
     PRIMARY KEY (`id`)
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
-
 -- CreateTable
-CREATE TABLE `loads` (
+CREATE TABLE `load_samples` (
+    `id` INT NOT NULL AUTO_INCREMENT,
+    `num` INT NOT NULL,
+    `hour` INT NOT NULL,
+    `minute` INT NOT NULL,
+    `val` DECIMAL(65,30) NOT NULL,
+    `season` VARCHAR(191) NOT NULL,
+
+    PRIMARY KEY (`id`)
+) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+-- CreateTable
+CREATE TABLE `pv_samples` (
+    `id` INT NOT NULL AUTO_INCREMENT,
+    `num` INT NOT NULL,
+    `hour` INT NOT NULL,
+    `minute` INT NOT NULL,
+    `val` DECIMAL(65,30) NOT NULL,
+    `season` VARCHAR(191) NOT NULL,
+
+    PRIMARY KEY (`id`)
+) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+-- CreateTable
+CREATE TABLE `ehp_samples` (
     `id` INT NOT NULL AUTO_INCREMENT,
     `num` INT NOT NULL,
     `hour` INT NOT NULL,
@@ -49,31 +67,7 @@ CREATE TABLE `loads` (
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
 -- CreateTable
-CREATE TABLE `pvs` (
-    `id` INT NOT NULL AUTO_INCREMENT,
-    `num` INT NOT NULL,
-    `hour` INT NOT NULL,
-    `minute` INT NOT NULL,
-    `val` DECIMAL(65,30) NOT NULL,
-    `season` VARCHAR(191) NOT NULL,
-
-    PRIMARY KEY (`id`)
-) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
-
--- CreateTable
-CREATE TABLE `ehps` (
-    `id` INT NOT NULL AUTO_INCREMENT,
-    `num` INT NOT NULL,
-    `hour` INT NOT NULL,
-    `minute` INT NOT NULL,
-    `val` DECIMAL(65,30) NOT NULL,
-    `season` VARCHAR(191) NOT NULL,
-
-    PRIMARY KEY (`id`)
-) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
-
--- CreateTable
-CREATE TABLE `uchps` (
+CREATE TABLE `uchp_samples` (
     `id` INT NOT NULL AUTO_INCREMENT,
     `num` INT NOT NULL,
     `hour` INT NOT NULL,
@@ -86,12 +80,8 @@ CREATE TABLE `uchps` (
 
 -- AddForeignKey
 ALTER TABLE `nodes` ADD FOREIGN KEY (`feederId`) REFERENCES `feeders`(`id`) ON DELETE CASCADE ON UPDATE CASCADE;
-
--- AddForeignKey
-ALTER TABLE `lines` ADD FOREIGN KEY (`feederId`) REFERENCES `feeders`(`id`) ON DELETE CASCADE ON UPDATE CASCADE;
-
 -- AddForeignKey
 ALTER TABLE `lines` ADD FOREIGN KEY (`prevNodeId`) REFERENCES `nodes`(`id`) ON DELETE CASCADE ON UPDATE CASCADE;
-
 -- AddForeignKey
 ALTER TABLE `lines` ADD FOREIGN KEY (`nextNodeId`) REFERENCES `nodes`(`id`) ON DELETE CASCADE ON UPDATE CASCADE;
+
