@@ -7,6 +7,6 @@ export class NodeListInteractor implements INodeListInteractor {
   constructor(private readonly nodeRepository: INodeRepository) {}
 
   handle(input: NodeListInput): Promise<NodeListOutput> {
-    return this.nodeRepository.listByFeederId(input.feederId);
+    return this.nodeRepository.findByFeederId(input.feederId);
   }
 }

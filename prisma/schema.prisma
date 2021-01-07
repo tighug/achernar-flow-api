@@ -15,7 +15,6 @@ model Feeder {
   networkNum Int
   feederNum  Int
   nodes      Node[]
-  lines      Line[]
 
   @@map(name: "feeders")
 }
@@ -36,8 +35,6 @@ model Node {
 
 model Line {
   id         Int    @id @default(autoincrement())
-  feeder     Feeder @relation(fields: [feederId], references: [id])
-  feederId   Int
   prevNode   Node   @relation("PrevNode", fields: [prevNodeId], references: [id])
   prevNodeId Int
   nextNode   Node   @relation("NextNode", fields: [nextNodeId], references: [id])
@@ -51,7 +48,7 @@ model Line {
   @@map(name: "lines")
 }
 
-model Load {
+model LoadSample {
   id     Int    @id @default(autoincrement())
   num    Int
   hour   Int
@@ -59,10 +56,10 @@ model Load {
   val    Float
   season String
 
-  @@map(name: "loads")
+  @@map(name: "load_samples")
 }
 
-model PV {
+model PVSample {
   id     Int    @id @default(autoincrement())
   num    Int
   hour   Int
@@ -70,10 +67,10 @@ model PV {
   val    Float
   season String
 
-  @@map(name: "pvs")
+  @@map(name: "pv_samples")
 }
 
-model EHP {
+model EHPSample {
   id     Int    @id @default(autoincrement())
   num    Int
   hour   Int
@@ -81,10 +78,10 @@ model EHP {
   val    Float
   season String
 
-  @@map(name: "ehps")
+  @@map(name: "ehp_samples")
 }
 
-model UCHP {
+model UCHPSample {
   id     Int    @id @default(autoincrement())
   num    Int
   hour   Int
@@ -92,5 +89,5 @@ model UCHP {
   val    Float
   season String
 
-  @@map(name: "uchps")
+  @@map(name: "uchp_samples")
 }

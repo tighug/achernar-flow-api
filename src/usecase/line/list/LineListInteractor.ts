@@ -7,6 +7,6 @@ export class LineListInteractor implements ILineListInteractor {
   constructor(private readonly lineRepository: ILineRepository) {}
 
   handle(input: LineListInput): Promise<LineListOutput> {
-    return this.lineRepository.listByFeederId(input.feederId);
+    return this.lineRepository.findByFeederId(input.feederId);
   }
 }

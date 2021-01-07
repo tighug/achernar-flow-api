@@ -1,9 +1,7 @@
-import { Feeder } from "./Feeder";
 import { Node } from "./Node";
 
 export class Line {
   readonly id: number;
-  readonly feeder: Feeder;
   readonly prevNode: Node;
   readonly nextNode: Node;
   readonly lengthM: number;
@@ -14,7 +12,6 @@ export class Line {
 
   constructor(props: Line) {
     this.id = props.id;
-    this.feeder = props.feeder;
     this.prevNode = props.prevNode;
     this.nextNode = props.nextNode;
     this.lengthM = props.lengthM;

@@ -9,7 +9,7 @@ export class FeederRepository implements IFeederRepository {
     return this.prisma.feeder.findMany();
   }
 
-  find(id: number): Promise<Feeder | null> {
+  findOne(id: number): Promise<Feeder | null> {
     return this.prisma.feeder.findUnique({ where: { id } });
   }
 }
