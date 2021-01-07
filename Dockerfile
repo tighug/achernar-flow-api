@@ -6,6 +6,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     curl \
     exa \
     git \
+    mariadb-server \
     vim \
     zsh \
     && apt-get -y clean \
