@@ -6,5 +6,6 @@ export interface ISampleRepository {
     minute: number;
     season: string;
     type: string;
-  }): Promise<Sample[]>;
+    fields: string[];
+  }): Promise<Partial<Sample>[]>;
 }

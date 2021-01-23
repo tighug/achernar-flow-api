@@ -2,7 +2,7 @@ import { Feeder } from "./Feeder";
 
 export class Node {
   readonly id: number;
-  readonly feeder: Feeder;
+  readonly feeder?: Feeder;
   readonly num: number;
   readonly posX: number;
   readonly posY: number;

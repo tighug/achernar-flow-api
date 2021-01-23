@@ -2,5 +2,5 @@ import { NodeListInput } from "./NodeListInput";
 import { NodeListOutput } from "./NodeListOutput";
 
 export interface INodeList {
-  handle(input: NodeListInput): Promise<NodeListOutput>;
+  handle(props: NodeListInput): Promise<NodeListOutput>;
 }

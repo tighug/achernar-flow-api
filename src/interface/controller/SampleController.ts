@@ -14,7 +14,7 @@ export class SampleController {
   async list(req: Request, res: Response, next: NextFunction): Promise<void> {
     try {
       const { type } = req.params;
-      const { hour, minute, season } = req.query;
+      const { hour, minute, season, fields } = req.query;
 
       if (hour === undefined)
         throw new createHttpError.BadRequest("hour is undefined.");
@@ -30,6 +30,8 @@ export class SampleController {
         throw new createHttpError.BadRequest("minute is invalid.");
       if (typeof season !== "string")
         throw new createHttpError.BadRequest("season is invalid");
+      if (typeof fields !== "string")
+        throw new createHttpError.BadRequest("fields must be string.");
       if (!validator.isInt(hour))
         throw new createHttpError.BadRequest("hour must be integer.");
       if (!validator.isInt(minute))
@@ -44,6 +46,7 @@ export class SampleController {
         minute: Number(minute),
         season: season,
         type: type,
+        fields: fields === undefined ? [] : fields.split(","),
       };
 
       const loads = await this.loadListInteractor.handle(input);

@@ -3,4 +3,5 @@ export type SampleListInput = {
   minute: number;
   season: string;
   type: string;
+  fields: string[];
 };
