@@ -2,7 +2,7 @@ import { Line } from "../../domain/model/Line";
 import { NodeBaseRO } from "./NodeSerializer";
 
 export class LineSerializer {
-  serializeArray(models: Line[]): LinesRO {
+  serializeArray(models: Partial<Line>[]): LinesRO {
     const lines = models.map(this.serializeSingle);
     return {
       lineCount: lines.length,
@@ -10,21 +10,23 @@ export class LineSerializer {
     };
   }
 
-  private serializeSingle(line: Line): LineBaseRO {
+  private serializeSingle(line: Partial<Line>): LineBaseRO {
     return { ...line };
   }
 }
 
-export type LineBaseRO = Readonly<{
-  id: number;
-  prevNode: NodeBaseRO;
-  nextNode: NodeBaseRO;
-  lengthM: number;
-  phase: number;
-  code: string;
-  rOhmPerKm: number;
-  xOhmPerKm: number;
-}>;
+export type LineBaseRO = Readonly<
+  Partial<{
+    id: number;
+    prevNode: NodeBaseRO;
+    nextNode: NodeBaseRO;
+    lengthM: number;
+    phase: number;
+    code: string;
+    rOhmPerKm: number;
+    xOhmPerKm: number;
+  }>
+>;
 
 export type LinesRO = Readonly<{
   lineCount: number;
