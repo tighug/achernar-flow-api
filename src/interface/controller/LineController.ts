@@ -1,30 +1,28 @@
 import { NextFunction, Request, Response } from "express";
 import validator from "validator";
 import createError from "http-errors";
-import { ILineListInteractor } from "../../usecase/line/list/ILineListInteractor";
-import { LineSerializer } from "../serializer/line/LineSerializer";
+import { ILineList } from "../../usecase/line/list/ILineList";
+import { LineSerializer } from "../serializer/LineSerializer";
 
 export class LineController {
   private readonly lineSerializer: LineSerializer;
 
-  constructor(private readonly lineListInteractor: ILineListInteractor) {
+  constructor(private readonly lineListInteractor: ILineList) {
     this.lineSerializer = new LineSerializer();
   }
 
   async list(req: Request, res: Response, next: NextFunction): Promise<void> {
     try {
-      const { feederId } = req.query;
+      const { feederId } = req.params;
 
       if (feederId === undefined)
         throw new createError.BadRequest("feederId is undefined.");
-      if (typeof feederId !== "string")
-        throw new createError.BadRequest("feederId is invalid.");
       if (!validator.isInt(feederId))
         throw new createError.BadRequest("feederId must be integer.");
 
       const input = { feederId: Number(feederId) };
       const lines = await this.lineListInteractor.handle(input);
-      const linesRO = this.lineSerializer.serialize(lines);
+      const linesRO = this.lineSerializer.serializeArray(lines);
       res.json(linesRO);
     } catch (err) {
       next(err);

@@ -1,5 +1,5 @@
 import { Request, Response } from "express";
-import { ErrorSerializer } from "../serializer/error/ErrorSerializer";
+import { ErrorSerializer } from "../serializer/ErrorSerializer";
 
 export class ErrorController {
   private readonly errorPresenter: ErrorSerializer;
