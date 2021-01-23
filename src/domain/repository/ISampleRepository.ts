@@ -1,10 +1,10 @@
-import { Sample, SampleType, Season } from "../model/Sample";
+import { Sample } from "../model/Sample";
 
 export interface ISampleRepository {
   findMany(props: {
     hour: number;
     minute: number;
-    season: Season;
-    type: SampleType;
+    season: string;
+    type: string;
   }): Promise<Sample[]>;
 }
