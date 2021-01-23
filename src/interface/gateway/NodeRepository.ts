@@ -5,9 +5,9 @@ import { INodeRepository } from "../../domain/repository/INodeRepository";
 export class NodeRepository implements INodeRepository {
   constructor(private prisma: PrismaClient) {}
 
-  findByFeederId(feederId: number): Promise<Node[]> {
+  findMany(props: { feederId: number }): Promise<Node[]> {
     return this.prisma.node.findMany({
-      where: { feederId },
+      where: { feederId: props.feederId },
       include: { feeder: true },
     });
   }
