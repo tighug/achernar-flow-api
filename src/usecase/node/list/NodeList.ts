@@ -1,12 +1,12 @@
 import { INodeRepository } from "../../../domain/repository/INodeRepository";
-import { INodeListInteractor } from "./INodeListInteractor";
+import { INodeList } from "./INodeList";
 import { NodeListInput } from "./NodeListInput";
 import { NodeListOutput } from "./NodeListOutput";
 
-export class NodeListInteractor implements INodeListInteractor {
+export class NodeList implements INodeList {
   constructor(private readonly nodeRepository: INodeRepository) {}
 
-  handle(input: NodeListInput): Promise<NodeListOutput> {
-    return this.nodeRepository.findByFeederId(input.feederId);
+  handle(props: NodeListInput): Promise<NodeListOutput> {
+    return this.nodeRepository.findMany(props);
   }
 }
