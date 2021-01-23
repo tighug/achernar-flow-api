@@ -1,6 +1,6 @@
 import { NodeListInput } from "./NodeListInput";
 import { NodeListOutput } from "./NodeListOutput";
 
-export interface INodeListInteractor {
+export interface INodeList {
   handle(input: NodeListInput): Promise<NodeListOutput>;
 }

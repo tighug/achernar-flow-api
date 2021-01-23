@@ -12,8 +12,6 @@ model Feeder {
   networkNum Int
   feederNum  Int
   nodes      Node[]
-
-  @@map(name: "feeders")
 }
 
 model Node {
@@ -26,8 +24,6 @@ model Node {
   hasLoad   Boolean
   nextLines Line[]  @relation("PrevNode")
   prevLines Line[]  @relation("NextNode")
-
-  @@map(name: "nodes")
 }
 
 model Line {
@@ -41,50 +37,14 @@ model Line {
   code       String
   rOhmPerKm  Float
   xOhmPerKm  Float
-
-  @@map(name: "lines")
 }
 
-model LoadSample {
+model Sample {
   id     Int    @id @default(autoincrement())
   num    Int
   hour   Int
   minute Int
   val    Float
   season String
-
-  @@map(name: "load_samples")
-}
-
-model PVSample {
-  id     Int    @id @default(autoincrement())
-  num    Int
-  hour   Int
-  minute Int
-  val    Float
-  season String
-
-  @@map(name: "pv_samples")
-}
-
-model EHPSample {
-  id     Int    @id @default(autoincrement())
-  num    Int
-  hour   Int
-  minute Int
-  val    Float
-  season String
-
-  @@map(name: "ehp_samples")
-}
-
-model UCHPSample {
-  id     Int    @id @default(autoincrement())
-  num    Int
-  hour   Int
-  minute Int
-  val    Float
-  season String
-
-  @@map(name: "uchp_samples")
+  type   String
 }

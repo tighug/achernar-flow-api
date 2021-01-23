@@ -1,8 +1,8 @@
 import { IFeederRepository } from "../../../domain/repository/IFeederRepository";
 import { FeederListOutput } from "./FeederListOutput";
-import { IFeederListInteractor } from "./IFeederListInteractor";
+import { IFeederList } from "./IFeederList";
 
-export class FeederListInteractor implements IFeederListInteractor {
+export class FeederList implements IFeederList {
   constructor(private readonly feederRepository: IFeederRepository) {}
 
   handle(): Promise<FeederListOutput> {

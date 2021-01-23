@@ -5,10 +5,10 @@ import { ILineRepository } from "../../domain/repository/ILineRepository";
 export class LineRepository implements ILineRepository {
   constructor(private prisma: PrismaClient) {}
 
-  findByFeederId(feederId: number): Promise<Line[]> {
+  findMany(props: { feederId: number }): Promise<Line[]> {
     return this.prisma.line.findMany({
       where: {
-        prevNode: { feederId },
+        prevNode: { feederId: props.feederId },
       },
       include: {
         prevNode: { include: { feeder: true } },

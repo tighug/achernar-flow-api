@@ -1,5 +1,4 @@
 import { isHttpError } from "http-errors";
-import { ErrorRO } from "./ErrorRO";
 
 export class ErrorSerializer {
   serialize(err: Error): ErrorRO {
@@ -10,4 +9,11 @@ export class ErrorSerializer {
       },
     };
   }
+}
+
+export interface ErrorRO {
+  error: {
+    status: number;
+    message: string;
+  };
 }

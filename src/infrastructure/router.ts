@@ -5,12 +5,12 @@ import { LineController } from "../interface/controller/LineController";
 import { FeederRepository } from "../interface/gateway/FeederRepository";
 import { NodeRepository } from "../interface/gateway/NodeRepository";
 import { LineRepository } from "../interface/gateway/LineRepository";
-import { FeederListInteractor } from "../usecase/feeder/list/FeederListInteractor";
-import { NodeListInteractor } from "../usecase/node/list/NodeListInteractor";
-import { LineListInteractor } from "../usecase/line/list/LineListInteractor";
+import { FeederList } from "../usecase/feeder/list/FeederList";
+import { NodeList } from "../usecase/node/list/NodeList";
+import { LineList } from "../usecase/line/list/LineList";
 import { PrismaClient } from "@prisma/client";
 import { SampleRepository } from "../interface/gateway/SampleRepository";
-import { SampleListInteractor } from "../usecase/sample/list/SampleListInteractor";
+import { SampleList } from "../usecase/sample/list/SampleList";
 import { SampleController } from "../interface/controller/SampleController";
 
 const router = express.Router();
@@ -21,15 +21,29 @@ const nodeRepository = new NodeRepository(prisma);
 const lineRepository = new LineRepository(prisma);
 const sampleRepository = new SampleRepository(prisma);
 
-const feederList = new FeederListInteractor(feederRepository);
-const nodeList = new NodeListInteractor(nodeRepository);
-const lineList = new LineListInteractor(lineRepository);
-const sampleList = new SampleListInteractor(sampleRepository);
+const feederList = new FeederList(feederRepository);
+const nodeList = new NodeList(nodeRepository);
+const lineList = new LineList(lineRepository);
+const sampleList = new SampleList(sampleRepository);
 
 const feederController = new FeederController(feederList);
 const nodeController = new NodeController(nodeList);
 const lineController = new LineController(lineList);
 const sampleController = new SampleController(sampleList);
+
+router.get(
+  "/feeders/:feederId/nodes",
+  async (req: Request, res: Response, next: NextFunction) => {
+    await nodeController.list(req, res, next);
+  }
+);
+
+router.get(
+  "/feeders/:feederId/lines",
+  async (req: Request, res: Response, next: NextFunction) => {
+    await lineController.list(req, res, next);
+  }
+);
 
 router.get(
   "/feeders",
@@ -39,21 +53,7 @@ router.get(
 );
 
 router.get(
-  "/nodes",
-  async (req: Request, res: Response, next: NextFunction) => {
-    await nodeController.list(req, res, next);
-  }
-);
-
-router.get(
-  "/lines",
-  async (req: Request, res: Response, next: NextFunction) => {
-    await lineController.list(req, res, next);
-  }
-);
-
-router.get(
-  "/samples",
+  "/samples/:type",
   async (req: Request, res: Response, next: NextFunction) => {
     await sampleController.list(req, res, next);
   }
