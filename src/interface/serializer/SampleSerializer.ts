@@ -1,7 +1,7 @@
 import { Sample } from "../../domain/model/Sample";
 
 export class SampleSerializer {
-  serializeArray(models: Partial<Sample>[]): SamplesRO {
+  static serializeArray(models: Partial<Sample>[]): SamplesRO {
     const samples = models.map(this.serializeSingle);
     return {
       sampleCount: samples.length,
@@ -9,7 +9,7 @@ export class SampleSerializer {
     };
   }
 
-  private serializeSingle(model: Partial<Sample>): SampleBaseRO {
+  private static serializeSingle(model: Partial<Sample>): SampleBaseRO {
     return { ...model };
   }
 }

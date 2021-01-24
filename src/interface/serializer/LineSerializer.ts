@@ -2,7 +2,7 @@ import { Line } from "../../domain/model/Line";
 import { NodeBaseRO } from "./NodeSerializer";
 
 export class LineSerializer {
-  serializeArray(models: Partial<Line>[]): LinesRO {
+  static serializeArray(models: Partial<Line>[]): LinesRO {
     const lines = models.map(this.serializeSingle);
     return {
       lineCount: lines.length,
@@ -10,7 +10,7 @@ export class LineSerializer {
     };
   }
 
-  private serializeSingle(line: Partial<Line>): LineBaseRO {
+  private static serializeSingle(line: Partial<Line>): LineBaseRO {
     return { ...line };
   }
 }
