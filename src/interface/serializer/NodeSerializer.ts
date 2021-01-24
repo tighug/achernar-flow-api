@@ -2,7 +2,7 @@ import { Node } from "../../domain/model/Node";
 import { FeederBaseRO } from "./FeederSerializer";
 
 export class NodeSerializer {
-  serializeArray(models: Partial<Node>[]): NodesRO {
+  static serializeArray(models: Partial<Node>[]): NodesRO {
     const nodes = models.map(this.serializeSingle);
     return {
       nodeCount: nodes.length,
@@ -10,7 +10,7 @@ export class NodeSerializer {
     };
   }
 
-  private serializeSingle(model: Partial<Node>): NodeBaseRO {
+  private static serializeSingle(model: Partial<Node>): NodeBaseRO {
     return { ...model };
   }
 }

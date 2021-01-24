@@ -1,7 +1,7 @@
 import { Feeder } from "../../domain/model/Feeder";
 
 export class FeederSerializer {
-  serializeArray(models: Feeder[]): FeedersRO {
+  static serializeArray(models: Partial<Feeder>[]): FeedersRO {
     const feeders = models.map(this.serializeSingleFeeder);
     return {
       feederCount: feeders.length,
@@ -9,16 +9,18 @@ export class FeederSerializer {
     };
   }
 
-  private serializeSingleFeeder(model: Feeder): FeederBaseRO {
+  private static serializeSingleFeeder(model: Partial<Feeder>): FeederBaseRO {
     return { ...model };
   }
 }
 
-export type FeederBaseRO = Readonly<{
-  id: number;
-  networkNum: number;
-  feederNum: number;
-}>;
+export type FeederBaseRO = Readonly<
+  Partial<{
+    id: number;
+    networkNum: number;
+    feederNum: number;
+  }>
+>;
 
 export type FeedersRO = {
   readonly feederCount: number;

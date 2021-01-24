@@ -1,6 +1,7 @@
 import { PrismaClient } from "@prisma/client";
 import { Node } from "../../domain/model/Node";
 import { INodeRepository } from "../../domain/repository/INodeRepository";
+import { FieldSelector } from "./FieldSelector";
 
 export class NodeRepository implements INodeRepository {
   constructor(private prisma: PrismaClient) {}
@@ -10,15 +11,10 @@ export class NodeRepository implements INodeRepository {
     fields: string[];
   }): Promise<Partial<Node>[]> {
     const { feederId, fields } = props;
-    const feeder = fields.includes("feeder");
-    const num = fields.includes("num");
-    const posX = fields.includes("posX");
-    const posY = fields.includes("posY");
-    const hasLoad = fields.includes("hasLoad");
 
     return this.prisma.node.findMany({
       where: { feederId },
-      select: { num, posX, posY, hasLoad, feeder },
+      select: FieldSelector.toNode(fields),
     });
   }
 }
