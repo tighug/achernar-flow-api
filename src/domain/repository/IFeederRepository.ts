@@ -1,5 +1,5 @@
 import { Feeder } from "../model/Feeder";
 
 export interface IFeederRepository {
-  findAll(): Promise<Feeder[]>;
+  findAll(props: { fields: string[] }): Promise<Partial<Feeder>[]>;
 }
