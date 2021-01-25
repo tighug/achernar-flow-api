@@ -74,6 +74,28 @@ export class FieldSelector {
       type,
     };
   }
+
+  static toCase(fields: string[]): CaseSelect {
+    const id = !fields.length || fields.includes("id");
+    const feeder = !fields.length || fields.includes("feeder");
+    const hour = !fields.length || fields.includes("hour");
+    const minute = !fields.length || fields.includes("minute");
+    const pvCount = !fields.length || fields.includes("pvCount");
+    const pvScale = !fields.length || fields.includes("pvScale");
+    const loadScale = !fields.length || fields.includes("loadScale");
+    const seed = !fields.length || fields.includes("seed");
+
+    return {
+      id,
+      feeder,
+      hour,
+      minute,
+      pvCount,
+      pvScale,
+      loadScale,
+      seed,
+    };
+  }
 }
 
 type FeederSelect = { id: boolean; networkNum: boolean; feederNum: boolean };
@@ -103,4 +125,14 @@ type SampleSelect = {
   val: boolean;
   season: boolean;
   type: boolean;
+};
+export type CaseSelect = {
+  id: boolean;
+  feeder: boolean | { select: FeederSelect };
+  hour: boolean;
+  minute: boolean;
+  pvCount: boolean;
+  pvScale: boolean;
+  loadScale: boolean;
+  seed: boolean;
 };

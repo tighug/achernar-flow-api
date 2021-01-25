@@ -6,12 +6,13 @@ import { FieldSelector } from "./FieldSelector";
 export class NodeRepository implements INodeRepository {
   constructor(private prisma: PrismaClient) {}
 
-  findMany(props: {
+  findMany({
+    feederId,
+    fields,
+  }: {
     feederId: number;
     fields: string[];
   }): Promise<Partial<Node>[]> {
-    const { feederId, fields } = props;
-
     return this.prisma.node.findMany({
       where: { feederId },
       select: FieldSelector.toNode(fields),

@@ -12,6 +12,7 @@ model Feeder {
   networkNum Int
   feederNum  Int
   nodes      Node[]
+  cases      Case[]
 }
 
 model Node {
@@ -47,4 +48,16 @@ model Sample {
   val    Float
   season String
   type   String
+}
+
+model Case {
+  id        Int    @id @default(autoincrement())
+  feeder    Feeder @relation(fields: [feederId], references: [id])
+  feederId  Int
+  hour      Int
+  minute    Int
+  pvCount   Int
+  pvScale   Float
+  loadScale Float
+  seed      Int
 }
