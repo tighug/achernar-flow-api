@@ -1,23 +1,24 @@
 import { PrismaClient } from "@prisma/client";
 import { Sample } from "../../domain/model/Sample";
 import { ISampleRepository } from "../../domain/repository/ISampleRepository";
+import { FieldSelector } from "./FieldSelector";
 
 export class SampleRepository implements ISampleRepository {
   constructor(private readonly prisma: PrismaClient) {}
 
-  findMany(props: {
+  findMany({
+    fields,
+    ...queries
+  }: {
     hour: number;
     minute: number;
     season: string;
     type: string;
+    fields: string[];
   }): Promise<Sample[]> {
     return this.prisma.sample.findMany({
-      where: {
-        hour: props.hour,
-        minute: props.minute,
-        season: props.season,
-        type: props.type,
-      },
+      where: queries,
+      select: FieldSelector.toSample(fields),
     });
   }
 }
