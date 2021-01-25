@@ -91,14 +91,14 @@ router.post(
 );
 
 router.get(
-  "/cases",
+  "/cases/:id",
   async (req: Request, res: Response, next: NextFunction) => {
     await caseController.get(req, res, next);
   }
 );
 
 router.delete(
-  "/cases",
+  "/cases/:id",
   async (req: Request, res: Response, next: NextFunction) => {
     await caseController.delete(req, res, next);
   }
