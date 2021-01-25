@@ -53,7 +53,7 @@ router.get(
 );
 
 router.get(
-  "/samples/:type",
+  "/samples",
   async (req: Request, res: Response, next: NextFunction) => {
     await sampleController.list(req, res, next);
   }

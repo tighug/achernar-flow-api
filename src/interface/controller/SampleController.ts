@@ -8,8 +8,7 @@ export class SampleController {
 
   async list(req: Request, res: Response, next: NextFunction): Promise<void> {
     try {
-      const { type } = req.params;
-      const { hour, minute, season, fields } = req.query;
+      const { hour, minute, season, type, fields } = req.query;
       const input = {
         hour: Sanitizer.toHour(hour),
         minute: Sanitizer.toMinute(minute),
