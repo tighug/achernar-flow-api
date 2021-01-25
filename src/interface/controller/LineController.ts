@@ -12,7 +12,7 @@ export class LineController {
       const { fields } = req.query;
       const input = {
         feederId: Sanitizer.toFeederId(feederId),
-        fields: Sanitizer.toFields(fields),
+        fields: Sanitizer.toFields(fields, false),
       };
       const lines = await this.lineList.handle(input);
       const linesRO = LineSerializer.serializeArray(lines);
