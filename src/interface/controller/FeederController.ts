@@ -10,7 +10,7 @@ export class FeederController {
     try {
       const { fields } = req.query;
       const input = {
-        fields: Sanitizer.toFields(fields),
+        fields: Sanitizer.toFields(fields, false),
       };
       const feeders = await this.feederList.handle(input);
       const feedersRO = FeederSerializer.serializeArray(feeders);

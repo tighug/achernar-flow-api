@@ -1,23 +1,23 @@
 export class FieldSelector {
   static toFeeder(fields: string[]): FeederSelect {
-    const id = fields.includes("id");
-    const networkNum = fields.includes("networkNum");
-    const feederNum = fields.includes("feederNum");
+    const id = !fields.length || fields.includes("id");
+    const networkNum = !fields.length || fields.includes("networkNum");
+    const feederNum = !fields.length || fields.includes("feederNum");
 
     return { id, networkNum, feederNum };
   }
 
   static toNode(fields: string[]): NodeSelect {
-    const id = fields.includes("id");
-    const feeder = fields.includes("feeder");
-    const num = fields.includes("num");
-    const posX = fields.includes("posX");
-    const posY = fields.includes("posY");
-    const hasLoad = fields.includes("hasLoad");
+    const id = !fields.length || fields.includes("id");
+    const feeder = !fields.length || fields.includes("feeder");
+    const num = !fields.length || fields.includes("num");
+    const posX = !fields.length || fields.includes("posX");
+    const posY = !fields.length || fields.includes("posY");
+    const hasLoad = !fields.length || fields.includes("hasLoad");
 
     return {
       id,
-      feeder: feeder ?? { select: this.toFeeder(fields) },
+      feeder: feeder ? { select: this.toFeeder(fields) } : false,
       num,
       posX,
       posY,
@@ -26,23 +26,27 @@ export class FieldSelector {
   }
 
   static toLine(fields: string[]): LineSelect {
-    const id = fields.includes("id");
-    const prevNode = fields.includes("prevNode");
-    const nextNode = fields.includes("nextNode");
-    const lengthM = fields.includes("lengthM");
-    const phase = fields.includes("phase");
-    const code = fields.includes("code");
-    const rOhmPerKm = fields.includes("rOhmPerKm");
-    const xOhmPerKm = fields.includes("xOhmPerKm");
+    const id = !fields.length || fields.includes("id");
+    const prevNode = !fields.length || fields.includes("prevNode");
+    const nextNode = !fields.length || fields.includes("nextNode");
+    const lengthM = !fields.length || fields.includes("lengthM");
+    const phase = !fields.length || fields.includes("phase");
+    const code = !fields.length || fields.includes("code");
+    const rOhmPerKm = !fields.length || fields.includes("rOhmPerKm");
+    const xOhmPerKm = !fields.length || fields.includes("xOhmPerKm");
 
     return {
       id,
-      prevNode: prevNode ?? {
-        select: this.toNode(fields),
-      },
-      nextNode: nextNode ?? {
-        select: this.toNode(fields),
-      },
+      prevNode: prevNode
+        ? {
+            select: this.toNode(fields),
+          }
+        : false,
+      nextNode: nextNode
+        ? {
+            select: this.toNode(fields),
+          }
+        : false,
       lengthM,
       phase,
       code,
@@ -52,13 +56,13 @@ export class FieldSelector {
   }
 
   static toSample(fields: string[]): SampleSelect {
-    const id = fields.includes("id");
-    const num = fields.includes("num");
-    const hour = fields.includes("hour");
-    const minute = fields.includes("minute");
-    const val = fields.includes("val");
-    const season = fields.includes("season");
-    const type = fields.includes("type");
+    const id = !fields.length || fields.includes("id");
+    const num = !fields.length || fields.includes("num");
+    const hour = !fields.length || fields.includes("hour");
+    const minute = !fields.length || fields.includes("minute");
+    const val = !fields.length || fields.includes("val");
+    const season = !fields.length || fields.includes("season");
+    const type = !fields.length || fields.includes("type");
 
     return {
       id,
