@@ -25,6 +25,7 @@ model Node {
   hasLoad   Boolean
   nextLines Line[]  @relation("PrevNode")
   prevLines Line[]  @relation("NextNode")
+  loads     Load[]
 }
 
 model Line {
@@ -64,6 +65,7 @@ model Case {
   seed      Int
   status    String
   flows     Flow[]
+  loads     Load[]
 }
 
 model Flow {
@@ -76,4 +78,14 @@ model Flow {
   nextNodeV Float
   lineI     Float
   before    Boolean
+}
+
+model Load {
+  id     Int    @id @default(autoincrement())
+  case   Case   @relation(fields: [caseId], references: [id])
+  caseId Int
+  node   Node   @relation(fields: [nodeId], references: [id])
+  nodeId Int
+  val    Float
+  type   String
 }
