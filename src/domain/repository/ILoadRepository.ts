@@ -1,3 +1,4 @@
+import { DeepPartial } from "../model/DeepPartial";
 import { Load } from "../model/Load";
 
 export interface ILoadRepository {

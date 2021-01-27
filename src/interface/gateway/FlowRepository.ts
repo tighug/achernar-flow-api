@@ -1,4 +1,5 @@
 import { PrismaClient } from "@prisma/client";
+import { DeepPartial } from "../../domain/model/DeepPartial";
 import { Flow } from "../../domain/model/Flow";
 import { IFlowRepository } from "../../domain/repository/IFlowRepository";
 import { FieldSelector } from "./FieldSelector";

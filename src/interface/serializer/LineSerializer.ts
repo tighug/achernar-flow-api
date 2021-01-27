@@ -1,8 +1,9 @@
+import { DeepPartial } from "../../domain/model/DeepPartial";
 import { Line } from "../../domain/model/Line";
 import { NodeBaseRO } from "./NodeSerializer";
 
 export class LineSerializer {
-  static serializeArray(models: Partial<Line>[]): LinesRO {
+  static serializeArray(models: DeepPartial<Line>[]): LinesRO {
     const lines = models.map(this.serializeSingle);
     return {
       lineCount: lines.length,
@@ -10,7 +11,7 @@ export class LineSerializer {
     };
   }
 
-  private static serializeSingle(line: Partial<Line>): LineBaseRO {
+  private static serializeSingle(line: DeepPartial<Line>): LineBaseRO {
     return { ...line };
   }
 }

@@ -1,3 +1,4 @@
+import { DeepPartial } from "../../domain/model/DeepPartial";
 import { Flow } from "../../domain/model/Flow";
 import { CaseBaseRO } from "./CaseSerializer";
 import { LineBaseRO } from "./LineSerializer";

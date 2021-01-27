@@ -1,3 +1,4 @@
+import { DeepPartial } from "../../domain/model/DeepPartial";
 import { Load } from "../../domain/model/Load";
 import { CaseBaseRO } from "./CaseSerializer";
 import { NodeBaseRO } from "./NodeSerializer";

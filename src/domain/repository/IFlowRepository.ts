@@ -1,3 +1,4 @@
+import { DeepPartial } from "../model/DeepPartial";
 import { Flow } from "../model/Flow";
 
 export interface IFlowRepository {

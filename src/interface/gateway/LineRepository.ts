@@ -1,4 +1,5 @@
 import { PrismaClient } from "@prisma/client";
+import { DeepPartial } from "../../domain/model/DeepPartial";
 import { Line } from "../../domain/model/Line";
 import { ILineRepository } from "../../domain/repository/ILineRepository";
 import { FieldSelector } from "./FieldSelector";
