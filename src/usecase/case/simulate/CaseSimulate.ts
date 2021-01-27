@@ -1,5 +1,6 @@
 import Bull, { Queue } from "bull";
 import createHttpError from "http-errors";
+import WebSocket, { Server } from "ws";
 import { ICaseRepository } from "../../../domain/repository/ICaseRepository";
 import { IFlowRepository } from "../../../domain/repository/IFlowRepository";
 import { ILoadRepository } from "../../../domain/repository/ILoadRepository";
@@ -11,15 +12,21 @@ import { ICaseSimulate } from "./ICaseSimulate";
 
 export class CaseSimulate implements ICaseSimulate {
   private readonly simulateQueue: Queue;
+  private readonly connected: WebSocket[] = [];
 
   constructor(
     private readonly caseRepository: ICaseRepository,
     private readonly flowRepository: IFlowRepository,
     private readonly loadRepository: ILoadRepository,
     private readonly flowService: FlowService,
-    private readonly loadService: LoadService
+    private readonly loadService: LoadService,
+    private readonly wss: Server
   ) {
     this.simulateQueue = new Bull("case");
+    this.wss.on("connection", (ws) => {
+      ws.send("connected");
+      this.connected.push(ws);
+    });
 
     this.simulateQueue.process("simulate", async (job) => {
       try {
@@ -43,15 +50,24 @@ export class CaseSimulate implements ICaseSimulate {
     });
 
     this.simulateQueue.on("active", async (job) => {
-      await this.caseRepository.update(job.data.case.id, "active");
+      const { id } = job.data.case;
+      const status = "active";
+      await this.caseRepository.update(id, status);
+      this.connected.forEach((ws) => ws.send(JSON.stringify({ id, status })));
     });
 
     this.simulateQueue.on("completed", async (job) => {
-      await this.caseRepository.update(job.data.case.id, "completed");
+      const { id } = job.data.case;
+      const status = "completed";
+      await this.caseRepository.update(id, status);
+      this.connected.forEach((ws) => ws.send(JSON.stringify({ id, status })));
     });
 
     this.simulateQueue.on("failed", async (job) => {
-      await this.caseRepository.update(job.data.case.id, "failed");
+      const { id } = job.data.case;
+      const status = "failed";
+      await this.caseRepository.update(id, status);
+      this.connected.forEach((ws) => ws.send(JSON.stringify({ id, status })));
     });
   }
 
