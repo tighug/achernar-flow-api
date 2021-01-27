@@ -1,34 +1,27 @@
 import { Case } from "../model/Case";
 import { Flow } from "../model/Flow";
 import { Line } from "../model/Line";
-import { IFlowRepository } from "../repository/IFlowRepository";
+import { Load } from "../model/Load";
 import { ILineRepository } from "../repository/ILineRepository";
-import { LoadService } from "./LoadService";
 
-const tolerance = 0.0001;
+const tolerance = 0.001;
 
 export class FlowService {
-  constructor(
-    private readonly lineRepository: ILineRepository,
-    private readonly flowRepository: IFlowRepository,
-    private readonly loadService: LoadService
-  ) {}
+  constructor(private readonly lineRepository: ILineRepository) {}
 
-  async calc(c: Required<Case>): Promise<void> {
-    const lines = (await this.lineRepository.findMany({
-      feederId: c.feeder.id,
-      fields: [],
-    })) as Required<Line>[];
-    const [loads, pvs] = await this.loadService.getLoadsAndPVs(c);
+  async calc(c: Required<Case>, loads: Load[], pvs: Load[]): Promise<Flow[]> {
+    const lines = (await this.lineRepository.findMany(
+      c.feeder.id
+    )) as Required<Line>[];
     const flows = lines.map((l) => {
       const load = loads.find((load) => load.node.id === l.nextNode.id);
       const pv = pvs.find((pv) => pv.node.id === l.nextNode.id);
-      const consume = load === undefined ? 0 : load.val * 1000;
-      const prosume = pv === undefined ? 0 : pv.val * 1000;
+      const consumedKw = load === undefined ? 0 : load.val;
+      const producedKw = pv === undefined ? 0 : pv.val;
       return new Flow({
         case: c,
         line: l,
-        nextNodeP: consume - prosume,
+        nextNodeP: (consumedKw - producedKw) * 1000,
         nextNodeV: c.baseV,
       });
     });
@@ -54,9 +47,7 @@ export class FlowService {
       else befFlows = [...flows];
     }
 
-    for (let i = 0; i < flows.length; i++) {
-      await this.flowRepository.save(flows[i]);
-    }
+    return flows;
   }
 
   private calcLineI(flows: Flow[], index: number): number {
