@@ -10,5 +10,6 @@ export interface ICaseRepository {
     feederId: number;
     fields: string[];
   }): Promise<Partial<Case>[]>;
-  delete(id: number): Promise<Required<Case>>;
+  update(props: { id: number; status: string }): Promise<Case>;
+  delete(id: number): Promise<void>;
 }

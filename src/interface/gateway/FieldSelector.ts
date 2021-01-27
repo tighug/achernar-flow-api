@@ -83,17 +83,41 @@ export class FieldSelector {
     const pvCount = !fields.length || fields.includes("pvCount");
     const pvScale = !fields.length || fields.includes("pvScale");
     const loadScale = !fields.length || fields.includes("loadScale");
+    const baseV = !fields.length || fields.includes("baseV");
     const seed = !fields.length || fields.includes("seed");
+    const status = !fields.length || fields.includes("status");
 
     return {
       id,
-      feeder,
+      feeder: feeder ? { select: this.toFeeder(fields) } : false,
       hour,
       minute,
       pvCount,
       pvScale,
       loadScale,
+      baseV,
       seed,
+      status,
+    };
+  }
+
+  static toFlow(fields: string[]): FlowSelect {
+    const id = !fields.length || fields.includes("id");
+    const c = !fields.length || fields.includes("case");
+    const line = !fields.length || fields.includes("line");
+    const nextNodeP = !fields.length || fields.includes("nextNodeP");
+    const nextNodeV = !fields.length || fields.includes("nextNodeV");
+    const lineI = !fields.length || fields.includes("lineI");
+    const before = !fields.length || fields.includes("before");
+
+    return {
+      id,
+      case: c ? { select: this.toCase(fields) } : false,
+      line: line ? { select: this.toLine(fields) } : false,
+      nextNodeP,
+      nextNodeV,
+      lineI,
+      before,
     };
   }
 }
@@ -134,5 +158,16 @@ export type CaseSelect = {
   pvCount: boolean;
   pvScale: boolean;
   loadScale: boolean;
+  baseV: boolean;
   seed: boolean;
+  status: boolean;
+};
+export type FlowSelect = {
+  id: boolean;
+  case: boolean | { select: CaseSelect };
+  line: boolean | { select: LineSelect };
+  nextNodeP: boolean;
+  nextNodeV: boolean;
+  lineI: boolean;
+  before: boolean;
 };

@@ -2,8 +2,8 @@ import { Node } from "./Node";
 
 export class Line {
   readonly id: number;
-  readonly prevNode: Node;
-  readonly nextNode: Node;
+  readonly prevNode?: Node;
+  readonly nextNode?: Node;
   readonly lengthM: number;
   readonly phase: number;
   readonly code: string;

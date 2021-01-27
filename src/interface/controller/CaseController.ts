@@ -4,6 +4,7 @@ import { ICaseDelete } from "../../usecase/case/delete/ICaseDelete";
 import { ICaseGet } from "../../usecase/case/get/ICaseGet";
 import { ICaseList } from "../../usecase/case/list/ICaseList";
 import { ICaseRegister } from "../../usecase/case/register/ICaseRegister";
+import { ICaseSimulate } from "../../usecase/case/simulate/ICaseSimulate";
 import { CaseSerializer } from "../serializer/CaseSerializer";
 import { Sanitizer } from "./Sanitizer";
 
@@ -12,6 +13,7 @@ export class CaseController {
     private readonly caseRegister: ICaseRegister,
     private readonly caseGet: ICaseGet,
     private readonly caseList: ICaseList,
+    private readonly caseSimulate: ICaseSimulate,
     private readonly caseDelete: ICaseDelete
   ) {}
 
@@ -28,6 +30,7 @@ export class CaseController {
         pvCount,
         pvScale,
         loadScale,
+        baseV,
         seed,
       } = req.body;
       const input = {
@@ -37,6 +40,7 @@ export class CaseController {
         pvCount: Sanitizer.toPvCount(pvCount),
         pvScale: Sanitizer.toPvScale(pvScale),
         loadScale: Sanitizer.toLoadScale(loadScale),
+        baseV: Sanitizer.toBaseV(baseV),
         seed: Sanitizer.toSeed(seed),
       };
       const c = await this.caseRegister.handle(input);
@@ -85,16 +89,36 @@ export class CaseController {
     }
   }
 
-  async delete(req: Request, res: Response, next: NextFunction): Promise<void> {
+  async simulate(
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ): Promise<void> {
     try {
       const { id } = req.params;
       const input = {
         id: Sanitizer.toId(id),
       };
-      const c = await this.caseDelete.handle(input);
-      const caseRO = CaseSerializer.serialize(c);
 
-      res.json(caseRO);
+      await this.caseSimulate.handle(input);
+
+      res.send();
+    } catch (err) {
+      next(err);
+    }
+  }
+
+  async delete(req: Request, res: Response, next: NextFunction): Promise<void> {
+    try {
+      const { id } = req.params;
+      const input = {
+        id: Sanitizer.toId(id),
+        fields: [],
+      };
+
+      await this.caseDelete.handle(input);
+
+      res.send();
     } catch (err) {
       next(err);
     }
