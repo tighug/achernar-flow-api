@@ -38,6 +38,7 @@ model Line {
   code       String
   rOhmPerKm  Float
   xOhmPerKm  Float
+  flows      Flow[]
 }
 
 model Sample {
@@ -59,5 +60,20 @@ model Case {
   pvCount   Int
   pvScale   Float
   loadScale Float
+  baseV     Float
   seed      Int
+  status    String
+  flows     Flow[]
+}
+
+model Flow {
+  id        Int     @id @default(autoincrement())
+  case      Case    @relation(fields: [caseId], references: [id])
+  caseId    Int
+  line      Line    @relation(fields: [lineId], references: [id])
+  lineId    Int
+  nextNodeP Float
+  nextNodeV Float
+  lineI     Float
+  before    Boolean
 }
