@@ -28,7 +28,9 @@ export type CaseBaseRO = Readonly<
     pvCount: number;
     pvScale: number;
     loadScale: number;
+    baseV: number;
     seed: number;
+    status: string;
   }>
 >;
 
