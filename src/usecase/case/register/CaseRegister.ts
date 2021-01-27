@@ -13,17 +13,17 @@ export class CaseRegister implements ICaseRegister {
     private readonly feederRepository: IFeederRepository
   ) {}
 
-  async handle(props: CaseRegisterInput): Promise<CaseRegisterOutput> {
-    const feeder = await this.feederRepository.findOne({
-      id: props.feederId,
-      fields: [],
-    });
+  async handle({
+    feederId,
+    ...props
+  }: CaseRegisterInput): Promise<CaseRegisterOutput> {
+    const feeder = (await this.feederRepository.findOne(
+      feederId
+    )) as Feeder | null;
 
     if (feeder === null)
       throw new createHttpError.NotFound("feeder is not found.");
 
-    return this.caseRepository.save(
-      new Case({ ...props, feeder: feeder as Feeder })
-    );
+    return this.caseRepository.save(new Case({ feeder, ...props }));
   }
 }

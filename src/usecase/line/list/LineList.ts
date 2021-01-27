@@ -6,7 +6,7 @@ import { LineListOutput } from "./LineListOutput";
 export class LineList implements ILineList {
   constructor(private readonly lineRepository: ILineRepository) {}
 
-  handle(props: LineListInput): Promise<LineListOutput> {
-    return this.lineRepository.findMany(props);
+  handle({ feederId, fields }: LineListInput): Promise<LineListOutput> {
+    return this.lineRepository.findMany(feederId, fields);
   }
 }

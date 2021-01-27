@@ -1,3 +1,3 @@
 export type FeederListInput = {
-  fields: string[];
+  fields?: string[];
 };

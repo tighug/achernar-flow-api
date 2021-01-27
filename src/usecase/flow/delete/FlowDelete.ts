@@ -6,7 +6,7 @@ import { IFlowDelete } from "./IFlowDelete";
 export class FlowDelete implements IFlowDelete {
   constructor(private readonly flowRepository: IFlowRepository) {}
 
-  handle(props: FlowDeleteInput): Promise<FlowDeleteOutput> {
-    return this.flowRepository.deleteMany(props.caseId);
+  handle({ caseId }: FlowDeleteInput): Promise<FlowDeleteOutput> {
+    return this.flowRepository.deleteMany(caseId);
   }
 }
