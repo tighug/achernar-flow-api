@@ -1,9 +1,10 @@
+import { DeepPartial } from "../../domain/model/DeepPartial";
 import { Flow } from "../../domain/model/Flow";
 import { CaseBaseRO } from "./CaseSerializer";
 import { LineBaseRO } from "./LineSerializer";
 
 export class FlowSerializer {
-  static serializeArray(models: Partial<Flow>[]): FlowsRO {
+  static serializeArray(models: DeepPartial<Flow>[]): FlowsRO {
     const flows = models.map(this.serializeSingle);
     return {
       flowCount: flows.length,
@@ -11,7 +12,7 @@ export class FlowSerializer {
     };
   }
 
-  private static serializeSingle(flow: Partial<Flow>): FlowBaseRO {
+  private static serializeSingle(flow: DeepPartial<Flow>): FlowBaseRO {
     return { ...flow };
   }
 }

@@ -6,7 +6,7 @@ import { SampleListOutput } from "./SampleListOutput";
 export class SampleList implements ISampleList {
   constructor(private readonly sampleRepository: ISampleRepository) {}
 
-  handle(props: SampleListInput): Promise<SampleListOutput> {
-    return this.sampleRepository.findMany(props);
+  handle({ fields, ...props }: SampleListInput): Promise<SampleListOutput> {
+    return this.sampleRepository.findMany(props, fields);
   }
 }

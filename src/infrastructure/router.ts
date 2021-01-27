@@ -25,23 +25,30 @@ import { FlowRepository } from "../interface/gateway/FlowRepository";
 import { FlowController } from "../interface/controller/FlowController";
 import { FlowList } from "../usecase/flow/list/FlowList";
 import { FlowDelete } from "../usecase/flow/delete/FlowDelete";
+import { LoadRepository } from "../interface/gateway/LoadRepository";
+import { LoadController } from "../interface/controller/LoadController";
+import { LoadList } from "../usecase/load/list/LoadList";
+import { LoadDelete } from "../usecase/load/delete/LoadDelete";
+import WebSocket from "ws";
 
 const router = express.Router();
 const prisma = new PrismaClient();
+const wss = new WebSocket.Server({ port: 9000 });
 
+// Repository
 const feederRepository = new FeederRepository(prisma);
 const nodeRepository = new NodeRepository(prisma);
 const lineRepository = new LineRepository(prisma);
 const sampleRepository = new SampleRepository(prisma);
 const caseRepository = new CaseRepository(prisma);
 const flowRepository = new FlowRepository(prisma);
+const loadRepository = new LoadRepository(prisma);
 
+// Service
 const loadService = new LoadService(sampleRepository, nodeRepository);
-const flowService = new FlowService(
-  lineRepository,
-  flowRepository,
-  loadService
-);
+const flowService = new FlowService(lineRepository);
+
+// Usecase
 const feederList = new FeederList(feederRepository);
 const nodeList = new NodeList(nodeRepository);
 const lineList = new LineList(lineRepository);
@@ -49,11 +56,21 @@ const sampleList = new SampleList(sampleRepository);
 const caseRegister = new CaseRegister(caseRepository, feederRepository);
 const caseGet = new CaseGet(caseRepository);
 const caseList = new CaseList(caseRepository);
-const caseSimulate = new CaseSimulate(caseRepository, flowService);
+const caseSimulate = new CaseSimulate(
+  caseRepository,
+  flowRepository,
+  loadRepository,
+  flowService,
+  loadService,
+  wss
+);
 const caseDelete = new CaseDelete(caseRepository);
 const flowList = new FlowList(flowRepository);
 const flowDelete = new FlowDelete(flowRepository);
+const loadList = new LoadList(loadRepository);
+const loadDelete = new LoadDelete(loadRepository);
 
+// Controller
 const feederController = new FeederController(feederList);
 const nodeController = new NodeController(nodeList);
 const lineController = new LineController(lineList);
@@ -66,6 +83,7 @@ const caseController = new CaseController(
   caseDelete
 );
 const flowController = new FlowController(flowList, flowDelete);
+const loadController = new LoadController(loadList, loadDelete);
 
 router.get(
   "/feeders/:feederId/nodes",
@@ -141,6 +159,20 @@ router.delete(
   "/cases/:caseId/flows",
   async (req: Request, res: Response, next: NextFunction) => {
     await flowController.delete(req, res, next);
+  }
+);
+
+router.get(
+  "/cases/:caseId/loads",
+  async (req: Request, res: Response, next: NextFunction) => {
+    await loadController.list(req, res, next);
+  }
+);
+
+router.delete(
+  "/cases/:caseId/loads",
+  async (req: Request, res: Response, next: NextFunction) => {
+    await loadController.delete(req, res, next);
   }
 );
 

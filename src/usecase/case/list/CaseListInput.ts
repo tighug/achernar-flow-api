@@ -1,4 +1,4 @@
 export type CaseListInput = {
   feederId: number;
-  fields: string[];
+  fields?: string[];
 };

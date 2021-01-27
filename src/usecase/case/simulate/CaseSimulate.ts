@@ -1,23 +1,48 @@
-import Bull, { Job, Queue } from "bull";
+import Bull, { Queue } from "bull";
 import createHttpError from "http-errors";
+import WebSocket, { Server } from "ws";
 import { ICaseRepository } from "../../../domain/repository/ICaseRepository";
+import { IFlowRepository } from "../../../domain/repository/IFlowRepository";
+import { ILoadRepository } from "../../../domain/repository/ILoadRepository";
 import { FlowService } from "../../../domain/service/FlowService";
+import { LoadService } from "../../../domain/service/LoadService";
 import { CaseSimulateInput } from "./CaseSimulateInput";
 import { CaseSimulateOutput } from "./CaseSimulateOutput";
 import { ICaseSimulate } from "./ICaseSimulate";
 
 export class CaseSimulate implements ICaseSimulate {
   private readonly simulateQueue: Queue;
+  private readonly connected: WebSocket[] = [];
 
   constructor(
     private readonly caseRepository: ICaseRepository,
-    private readonly flowService: FlowService
+    private readonly flowRepository: IFlowRepository,
+    private readonly loadRepository: ILoadRepository,
+    private readonly flowService: FlowService,
+    private readonly loadService: LoadService,
+    private readonly wss: Server
   ) {
     this.simulateQueue = new Bull("case");
-    this.simulateQueue.process("simulate", (job) => {
+    this.wss.on("connection", (ws) => {
+      ws.send("connected");
+      this.connected.push(ws);
+    });
+
+    this.simulateQueue.process("simulate", async (job) => {
       try {
-        console.dir(job.data);
-        return this.flowService.calc(job.data.case);
+        const [loads, pvs] = await this.loadService.getLoadsAndPVs(
+          job.data.case
+        );
+        const flows = await this.flowService.calc(job.data.case, loads, pvs);
+        for (let i = 0; i < flows.length; i++) {
+          await this.flowRepository.save(flows[i]);
+        }
+        for (let i = 0; i < loads.length; i++) {
+          await this.loadRepository.save(loads[i]);
+        }
+        for (let i = 0; i < pvs.length; i++) {
+          await this.loadRepository.save(pvs[i]);
+        }
       } catch (err) {
         console.error(err);
         return err;
@@ -25,29 +50,29 @@ export class CaseSimulate implements ICaseSimulate {
     });
 
     this.simulateQueue.on("active", async (job) => {
-      await this.caseRepository.update({
-        id: job.data.case.id,
-        status: "active",
-      });
+      const { id } = job.data.case;
+      const status = "active";
+      await this.caseRepository.update(id, status);
+      this.connected.forEach((ws) => ws.send(JSON.stringify({ id, status })));
     });
 
     this.simulateQueue.on("completed", async (job) => {
-      await this.caseRepository.update({
-        id: job.data.case.id,
-        status: "completed",
-      });
+      const { id } = job.data.case;
+      const status = "completed";
+      await this.caseRepository.update(id, status);
+      this.connected.forEach((ws) => ws.send(JSON.stringify({ id, status })));
     });
 
     this.simulateQueue.on("failed", async (job) => {
-      await this.caseRepository.update({
-        id: job.data.case.id,
-        status: "failed",
-      });
+      const { id } = job.data.case;
+      const status = "failed";
+      await this.caseRepository.update(id, status);
+      this.connected.forEach((ws) => ws.send(JSON.stringify({ id, status })));
     });
   }
 
   async handle({ id }: CaseSimulateInput): Promise<CaseSimulateOutput> {
-    const c = await this.caseRepository.findOne({ id, fields: [] });
+    const c = await this.caseRepository.findOne(id);
 
     if (c === null) throw new createHttpError.NotFound("Not Found.");
     if (c.status !== "waiting")

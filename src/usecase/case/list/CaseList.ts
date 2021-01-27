@@ -6,7 +6,7 @@ import { ICaseList } from "./ICaseList";
 export class CaseList implements ICaseList {
   constructor(private readonly caseRepository: ICaseRepository) {}
 
-  handle(props: CaseListInput): Promise<CaseListOutput> {
-    return this.caseRepository.findMany(props);
+  handle({ feederId, fields }: CaseListInput): Promise<CaseListOutput> {
+    return this.caseRepository.findMany(feederId, fields);
   }
 }

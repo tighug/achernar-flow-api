@@ -1,4 +1,5 @@
 import { PrismaClient } from "@prisma/client";
+import { DeepPartial } from "../../domain/model/DeepPartial";
 import { Flow } from "../../domain/model/Flow";
 import { IFlowRepository } from "../../domain/repository/IFlowRepository";
 import { FieldSelector } from "./FieldSelector";
@@ -6,7 +7,7 @@ import { FieldSelector } from "./FieldSelector";
 export class FlowRepository implements IFlowRepository {
   constructor(private readonly prisma: PrismaClient) {}
 
-  async save({ id, case: c, line, ...props }: Flow): Promise<Flow> {
+  async save({ id, case: c, line, ...props }: Flow): Promise<Required<Flow>> {
     return await this.prisma.flow.create({
       data: {
         ...props,
@@ -29,17 +30,15 @@ export class FlowRepository implements IFlowRepository {
     });
   }
 
-  async findMany({
-    caseId,
-    before,
-    fields,
-  }: {
-    caseId: number;
-    before: boolean;
-    fields: string[];
-  }): Promise<Partial<Flow>[]> {
+  async findMany(
+    props: {
+      caseId: number;
+      before: boolean;
+    },
+    fields: string[] = []
+  ): Promise<DeepPartial<Flow>[]> {
     return this.prisma.flow.findMany({
-      where: { caseId, before },
+      where: props,
       select: FieldSelector.toFlow(fields),
     });
   }

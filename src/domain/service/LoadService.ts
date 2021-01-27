@@ -12,15 +12,8 @@ export class LoadService {
     private readonly nodeRepository: INodeRepository
   ) {}
 
-  async getLoadsAndPVs({
-    feeder,
-    hour,
-    minute,
-    pvCount,
-    pvScale,
-    loadScale,
-    seed,
-  }: Required<Case>): Promise<[Load[], Load[]]> {
+  async getLoadsAndPVs(c: Required<Case>): Promise<[Load[], Load[]]> {
+    const { feeder, hour, minute, pvCount, pvScale, loadScale, seed } = c;
     const rand = new Random(seed);
     const [loadSamples, pvSamples, nodes] = await Promise.all([
       this.sampleRepository.findMany({
@@ -28,19 +21,14 @@ export class LoadService {
         minute,
         season: "summer",
         type: "load",
-        fields: [],
       }) as Promise<Required<Sample>[]>,
       this.sampleRepository.findMany({
         hour,
         minute,
         season: "summer",
         type: "pv",
-        fields: [],
       }) as Promise<Required<Sample>[]>,
-      this.nodeRepository.findMany({
-        feederId: feeder.id,
-        fields: [],
-      }) as Promise<Required<Node>[]>,
+      this.nodeRepository.findMany(feeder.id) as Promise<Required<Node>[]>,
     ]);
     const houses = nodes.filter((n) => n.hasLoad);
     const loads = Array.from(
@@ -49,6 +37,7 @@ export class LoadService {
     ).map(
       (load, i) =>
         new Load({
+          case: c,
           node: houses[i],
           val: load.val * loadScale,
           type: "load",
@@ -61,6 +50,7 @@ export class LoadService {
     ).map(
       (pv, i) =>
         new Load({
+          case: c,
           node: shuffledHouses[i],
           val: pv.val * pvScale,
           type: "pv",

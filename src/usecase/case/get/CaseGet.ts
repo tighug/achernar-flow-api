@@ -6,7 +6,7 @@ import { ICaseGet } from "./ICaseGet";
 export class CaseGet implements ICaseGet {
   constructor(private readonly caseRepository: ICaseRepository) {}
 
-  handle(props: CaseGetInput): Promise<CaseGetOutput> {
-    return this.caseRepository.findOne(props);
+  handle({ id, fields }: CaseGetInput): Promise<CaseGetOutput> {
+    return this.caseRepository.findOne(id, fields);
   }
 }

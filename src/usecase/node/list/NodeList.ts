@@ -6,7 +6,7 @@ import { NodeListOutput } from "./NodeListOutput";
 export class NodeList implements INodeList {
   constructor(private readonly nodeRepository: INodeRepository) {}
 
-  handle(props: NodeListInput): Promise<NodeListOutput> {
-    return this.nodeRepository.findMany(props);
+  handle({ feederId, fields }: NodeListInput): Promise<NodeListOutput> {
+    return this.nodeRepository.findMany(feederId, fields);
   }
 }
