@@ -1,6 +1,8 @@
 import Bull, { Queue } from "bull";
 import createHttpError from "http-errors";
 import { ICaseRepository } from "../../../domain/repository/ICaseRepository";
+import { IFlowRepository } from "../../../domain/repository/IFlowRepository";
+import { ILoadRepository } from "../../../domain/repository/ILoadRepository";
 import { FlowService } from "../../../domain/service/FlowService";
 import { LoadService } from "../../../domain/service/LoadService";
 import { CaseSimulateInput } from "./CaseSimulateInput";
@@ -12,6 +14,8 @@ export class CaseSimulate implements ICaseSimulate {
 
   constructor(
     private readonly caseRepository: ICaseRepository,
+    private readonly flowRepository: IFlowRepository,
+    private readonly loadRepository: ILoadRepository,
     private readonly flowService: FlowService,
     private readonly loadService: LoadService
   ) {
@@ -22,7 +26,16 @@ export class CaseSimulate implements ICaseSimulate {
         const [loads, pvs] = await this.loadService.getLoadsAndPVs(
           job.data.case
         );
-        return this.flowService.calc(job.data.case, loads, pvs);
+        const flows = await this.flowService.calc(job.data.case, loads, pvs);
+        for (let i = 0; i < flows.length; i++) {
+          await this.flowRepository.save(flows[i]);
+        }
+        for (let i = 0; i < loads.length; i++) {
+          await this.loadRepository.save(loads[i]);
+        }
+        for (let i = 0; i < pvs.length; i++) {
+          await this.loadRepository.save(pvs[i]);
+        }
       } catch (err) {
         console.error(err);
         return err;
