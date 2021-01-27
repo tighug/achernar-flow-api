@@ -6,17 +6,12 @@ import { FieldSelector } from "./FieldSelector";
 export class LineRepository implements ILineRepository {
   constructor(private prisma: PrismaClient) {}
 
-  findMany({
-    feederId,
-    fields,
-  }: {
-    feederId: number;
-    fields: string[];
-  }): Promise<Partial<Line>[]> {
+  findMany(
+    feederId: number,
+    fields: string[] = []
+  ): Promise<DeepPartial<Line>[]> {
     return this.prisma.line.findMany({
-      where: {
-        prevNode: { feederId },
-      },
+      where: { prevNode: { feederId } },
       select: FieldSelector.toLine(fields),
     });
   }

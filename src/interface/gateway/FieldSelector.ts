@@ -120,6 +120,22 @@ export class FieldSelector {
       before,
     };
   }
+
+  static toLoad(fields: string[]): LoadSelect {
+    const id = !fields.length || fields.includes("id");
+    const c = !fields.length || fields.includes("case");
+    const node = !fields.length || fields.includes("node");
+    const val = !fields.length || fields.includes("val");
+    const type = !fields.length || fields.includes("type");
+
+    return {
+      id,
+      case: c ? { select: this.toCase(fields) } : false,
+      node: node ? { select: this.toNode(fields) } : false,
+      val,
+      type,
+    };
+  }
 }
 
 type FeederSelect = { id: boolean; networkNum: boolean; feederNum: boolean };
@@ -170,4 +186,11 @@ export type FlowSelect = {
   nextNodeV: boolean;
   lineI: boolean;
   before: boolean;
+};
+export type LoadSelect = {
+  id: boolean;
+  case: boolean | { select: CaseSelect };
+  node: boolean | { select: NodeSelect };
+  val: boolean;
+  type: boolean;
 };
