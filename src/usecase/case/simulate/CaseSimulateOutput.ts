@@ -1,3 +1,3 @@
 import { Case } from "../../../domain/model/Case";
 
-export type CaseDeleteOutput = void;
+export type CaseSimulateOutput = Partial<Case>;

@@ -5,5 +5,6 @@ export type CaseRegisterInput = {
   pvCount: number;
   pvScale: number;
   loadScale: number;
+  baseV: number;
   seed: number;
 };
