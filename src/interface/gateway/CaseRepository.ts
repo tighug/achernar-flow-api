@@ -1,6 +1,5 @@
 import { PrismaClient } from "@prisma/client";
 import { Case } from "../../domain/model/Case";
-import { Feeder } from "../../domain/model/Feeder";
 import { ICaseRepository } from "../../domain/repository/ICaseRepository";
 import { FieldSelector } from "./FieldSelector";
 
@@ -10,6 +9,7 @@ export class CaseRepository implements ICaseRepository {
   async save(c: Case): Promise<Required<Case>> {
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const { id, feeder, ...props } = c;
+    if (feeder === undefined) throw new Error("feeder is undefined.");
     return await this.prisma.case.create({
       data: {
         ...props,
@@ -47,10 +47,11 @@ export class CaseRepository implements ICaseRepository {
     });
   }
 
-  async delete(id: number): Promise<Required<Case>> {
-    return await this.prisma.case.delete({
-      where: { id },
-      include: { feeder: true },
-    });
+  async update({ id, status }: { id: number; status: string }): Promise<Case> {
+    return this.prisma.case.update({ where: { id }, data: { status } });
+  }
+
+  async delete(id: number): Promise<void> {
+    await this.prisma.case.delete({ where: { id } });
   }
 }
