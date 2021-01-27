@@ -2,14 +2,14 @@ import { Feeder } from "./Feeder";
 
 export class Case {
   id?: number;
-  feeder?: Feeder;
-  hour: number;
-  minute: number;
-  pvCount: number;
-  pvScale: number;
-  loadScale: number;
-  baseV: number;
-  seed: number;
+  readonly feeder: Feeder;
+  readonly hour: number;
+  readonly minute: number;
+  readonly pvCount: number;
+  readonly pvScale: number;
+  readonly loadScale: number;
+  readonly baseV: number;
+  readonly seed: number;
   status = "waiting";
 
   constructor(props: Omit<Case, "id" | "status">) {

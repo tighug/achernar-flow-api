@@ -2,7 +2,7 @@ import { Case } from "./Case";
 import { Line } from "./Line";
 
 export class Flow {
-  readonly id?: number;
+  id?: number;
   readonly case: Case;
   readonly line: Line;
   nextNodeP: number;
