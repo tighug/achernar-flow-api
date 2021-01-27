@@ -17,7 +17,7 @@ export class LoadController {
       const input = {
         caseId: Sanitizer.toCaseId(caseId),
         type: Sanitizer.toType(type),
-        fields: Sanitizer.toFields(fields),
+        fields: Sanitizer.toFields(fields, false),
       };
       const loads = await this.loadList.handle(input);
       const loadsRO = LoadSerializer.serializeArray(loads);
