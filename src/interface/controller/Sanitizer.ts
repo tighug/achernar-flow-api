@@ -10,8 +10,7 @@ export class Sanitizer {
     if (required) this.checkNotEmpty(id, name);
     else if (id === undefined) return init;
 
-    this.checkString(id, name);
-    this.checkInt(id, name);
+    this.checkInt(String(id), name);
 
     return Number(id);
   }
@@ -22,10 +21,20 @@ export class Sanitizer {
     if (required) this.checkNotEmpty(feederId, name);
     else if (feederId === undefined) return init;
 
-    this.checkString(feederId, name);
-    this.checkInt(feederId, name);
+    this.checkInt(String(feederId), name);
 
     return Number(feederId);
+  }
+
+  static toCaseId(caseId: any, required = true, init = 0): number {
+    const name = "caseId";
+
+    if (required) this.checkNotEmpty(caseId, name);
+    else if (caseId === undefined) return init;
+
+    this.checkInt(String(caseId), name);
+
+    return Number(caseId);
   }
 
   static toFields(fields: any, required = true, init = []): string[] {
@@ -45,8 +54,7 @@ export class Sanitizer {
     if (required) this.checkNotEmpty(hour, name);
     else if (hour === undefined) return init;
 
-    this.checkString(hour, name);
-    this.checkInt(hour, name);
+    this.checkInt(String(hour), name);
 
     return Number(hour);
   }
@@ -57,8 +65,7 @@ export class Sanitizer {
     if (required) this.checkNotEmpty(minute, name);
     else if (minute === undefined) return init;
 
-    this.checkString(minute, name);
-    this.checkInt(minute, name);
+    this.checkInt(String(minute), name);
 
     return Number(minute);
   }
@@ -93,8 +100,7 @@ export class Sanitizer {
     if (required) this.checkNotEmpty(pvCount, name);
     else if (pvCount === undefined) return init;
 
-    this.checkString(pvCount, name);
-    this.checkInt(pvCount, name);
+    this.checkInt(String(pvCount), name);
 
     return Number(pvCount);
   }
@@ -105,7 +111,7 @@ export class Sanitizer {
     if (required) this.checkNotEmpty(pvScale, name);
     else if (pvScale === undefined) return init;
 
-    this.checkString(pvScale, name);
+    this.checkNumeric(String(pvScale), name);
 
     return Number(pvScale);
   }
@@ -116,9 +122,20 @@ export class Sanitizer {
     if (required) this.checkNotEmpty(loadScale, name);
     else if (loadScale === undefined) return init;
 
-    this.checkString(loadScale, name);
+    this.checkNumeric(String(loadScale), name);
 
     return Number(loadScale);
+  }
+
+  static toBaseV(baseV: any, required = true, init = 0): number {
+    const name = "baseV";
+
+    if (required) this.checkNotEmpty(baseV, name);
+    else if (baseV === undefined) return init;
+
+    this.checkNumeric(String(baseV), name);
+
+    return Number(baseV);
   }
 
   static toSeed(seed: any, required = true, init = 0): number {
@@ -127,10 +144,20 @@ export class Sanitizer {
     if (required) this.checkNotEmpty(seed, name);
     else if (seed === undefined) return init;
 
-    this.checkString(seed, name);
-    this.checkInt(seed, name);
+    this.checkInt(String(seed), name);
 
     return Number(seed);
+  }
+
+  static toBefore(before: any, required = true, init = false): boolean {
+    const name = "before";
+
+    if (required) this.checkNotEmpty(before, name);
+    else if (before === undefined) return init;
+
+    this.checkBoolean(String(before), name);
+
+    return Boolean(before);
   }
 
   private static checkNotEmpty(data: any, name: string) {
@@ -146,5 +173,15 @@ export class Sanitizer {
   private static checkInt(data: string, name: string): void {
     if (!validator.isInt(data))
       throw new createHttpError.BadRequest(`${name} must be integer.`);
+  }
+
+  private static checkNumeric(data: string, name: string): void {
+    if (!validator.isNumeric(data))
+      throw new createHttpError.BadRequest(`${name} must be number.`);
+  }
+
+  private static checkBoolean(data: string, name: string): void {
+    if (!validator.isBoolean(data))
+      throw new createHttpError.BadRequest(`${name} must be boolean.`);
   }
 }
