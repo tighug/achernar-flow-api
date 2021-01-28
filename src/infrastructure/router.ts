@@ -1,4 +1,4 @@
-import express, { NextFunction, Request, Response } from "express";
+import express from "express";
 import { FeederController } from "../interface/controller/FeederController";
 import { NodeController } from "../interface/controller/NodeController";
 import { LineController } from "../interface/controller/LineController";
@@ -85,95 +85,49 @@ const caseController = new CaseController(
 const flowController = new FlowController(flowList, flowDelete);
 const loadController = new LoadController(loadList, loadDelete);
 
-router.get(
-  "/feeders/:feederId/nodes",
-  async (req: Request, res: Response, next: NextFunction) => {
-    await nodeController.list(req, res, next);
-  }
-);
+// Feeders
+router.get("/feeders/:feederId/nodes", (req, res, next) => {
+  nodeController.list(req, res, next);
+});
+router.get("/feeders/:feederId/lines", (req, res, next) => {
+  lineController.list(req, res, next);
+});
+router.get("/feeders/:feederId/cases", (req, res, next) => {
+  caseController.list(req, res, next);
+});
+router.get("/feeders", (req, res, next) => {
+  feederController.list(req, res, next);
+});
 
-router.get(
-  "/feeders/:feederId/lines",
-  async (req: Request, res: Response, next: NextFunction) => {
-    await lineController.list(req, res, next);
-  }
-);
+// Samples
+router.get("/samples", (req, res, next) => {
+  sampleController.list(req, res, next);
+});
 
-router.get(
-  "/feeders/:feederId/cases",
-  async (req: Request, res: Response, next: NextFunction) => {
-    await caseController.list(req, res, next);
-  }
-);
-
-router.get(
-  "/feeders",
-  async (req: Request, res: Response, next: NextFunction) => {
-    await feederController.list(req, res, next);
-  }
-);
-
-router.get(
-  "/samples",
-  async (req: Request, res: Response, next: NextFunction) => {
-    await sampleController.list(req, res, next);
-  }
-);
-
-router.post(
-  "/cases",
-  async (req: Request, res: Response, next: NextFunction) => {
-    await caseController.register(req, res, next);
-  }
-);
-
-router.get(
-  "/cases/:id",
-  async (req: Request, res: Response, next: NextFunction) => {
-    await caseController.get(req, res, next);
-  }
-);
-
-router.put(
-  "/cases/:id",
-  async (req: Request, res: Response, next: NextFunction) => {
-    await caseController.simulate(req, res, next);
-  }
-);
-
-router.delete(
-  "/cases/:id",
-  async (req: Request, res: Response, next: NextFunction) => {
-    await caseController.delete(req, res, next);
-  }
-);
-
-router.get(
-  "/cases/:caseId/flows",
-  async (req: Request, res: Response, next: NextFunction) => {
-    await flowController.list(req, res, next);
-  }
-);
-
-router.delete(
-  "/cases/:caseId/flows",
-  async (req: Request, res: Response, next: NextFunction) => {
-    await flowController.delete(req, res, next);
-  }
-);
-
-router.get(
-  "/cases/:caseId/loads",
-  async (req: Request, res: Response, next: NextFunction) => {
-    await loadController.list(req, res, next);
-  }
-);
-
-router.delete(
-  "/cases/:caseId/loads",
-  async (req: Request, res: Response, next: NextFunction) => {
-    await loadController.delete(req, res, next);
-  }
-);
+// Cases
+router.post("/cases", (req, res, next) => {
+  caseController.register(req, res, next);
+});
+router.get("/cases/:id", (req, res, next) => {
+  caseController.get(req, res, next);
+});
+router.put("/cases/:id", (req, res, next) => {
+  caseController.simulate(req, res, next);
+});
+router.delete("/cases/:id", (req, res, next) => {
+  caseController.delete(req, res, next);
+});
+router.get("/cases/:caseId/flows", (req, res, next) => {
+  flowController.list(req, res, next);
+});
+router.delete("/cases/:caseId/flows", (req, res, next) => {
+  flowController.delete(req, res, next);
+});
+router.get("/cases/:caseId/loads", (req, res, next) => {
+  loadController.list(req, res, next);
+});
+router.delete("/cases/:caseId/loads", (req, res, next) => {
+  loadController.delete(req, res, next);
+});
 
 export default router;
