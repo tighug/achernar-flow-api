@@ -4,7 +4,6 @@ import { ICaseDelete } from "../../usecase/case/delete/ICaseDelete";
 import { ICaseGet } from "../../usecase/case/get/ICaseGet";
 import { ICaseList } from "../../usecase/case/list/ICaseList";
 import { ICaseRegister } from "../../usecase/case/register/ICaseRegister";
-import { ICaseSimulate } from "../../usecase/case/simulate/ICaseSimulate";
 import { CaseSerializer } from "../serializer/CaseSerializer";
 import { Sanitizer } from "./Sanitizer";
 
@@ -13,7 +12,6 @@ export class CaseController {
     private readonly caseRegister: ICaseRegister,
     private readonly caseGet: ICaseGet,
     private readonly caseList: ICaseList,
-    private readonly caseSimulate: ICaseSimulate,
     private readonly caseDelete: ICaseDelete
   ) {}
 
@@ -84,25 +82,6 @@ export class CaseController {
       const casesRO = CaseSerializer.serializeArray(cases);
 
       res.json(casesRO);
-    } catch (err) {
-      next(err);
-    }
-  }
-
-  async simulate(
-    req: Request,
-    res: Response,
-    next: NextFunction
-  ): Promise<void> {
-    try {
-      const { id } = req.params;
-      const input = {
-        id: Sanitizer.toId(id),
-      };
-
-      await this.caseSimulate.handle(input);
-
-      res.send();
     } catch (err) {
       next(err);
     }
