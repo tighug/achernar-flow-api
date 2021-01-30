@@ -13,7 +13,7 @@ export class JobController {
     try {
       const { caseId } = req.params;
       const input = {
-        caseId: Sanitizer.toId(caseId),
+        caseId: Sanitizer.toCaseId(caseId),
       };
 
       const job = await this.jobAdd.handle(input);
