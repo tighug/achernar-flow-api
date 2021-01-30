@@ -21,7 +21,6 @@ import { LoadRepository } from "../interface/gateway/LoadRepository";
 import { LoadList } from "../usecase/load/list/LoadList";
 import { LoadDelete } from "../usecase/load/delete/LoadDelete";
 import { JobRepository } from "../interface/gateway/JobRepository";
-import { JobService } from "../domain/service/JobService";
 import { JobAdd } from "../usecase/job/add/JobAdd";
 import { JobCount } from "../usecase/job/count/JobCount";
 import { FeederController } from "../interface/controller/FeederController";
@@ -54,14 +53,6 @@ export const router = (
   // Service
   const loadService = new LoadService(sampleRepository, nodeRepository);
   const flowService = new FlowService(lineRepository);
-  new JobService(
-    loadService,
-    flowService,
-    caseRepository,
-    flowRepository,
-    loadRepository,
-    jobRepository
-  );
 
   // Usecase
   const feederList = new FeederList(feederRepository);
@@ -76,7 +67,14 @@ export const router = (
   const flowDelete = new FlowDelete(flowRepository);
   const loadList = new LoadList(loadRepository);
   const loadDelete = new LoadDelete(loadRepository);
-  const jobAdd = new JobAdd(jobRepository, caseRepository);
+  const jobAdd = new JobAdd(
+    loadService,
+    flowService,
+    jobRepository,
+    caseRepository,
+    flowRepository,
+    loadRepository
+  );
   const jobCount = new JobCount(jobRepository);
 
   const feeder = new FeederController(feederList);
@@ -129,7 +127,7 @@ export const router = (
       .delete("/cases/:caseId/loads", (req, res, next) => {
         load.delete(req, res, next);
       })
-      .put("/cases/:id/jobs", (req, res, next) => {
+      .post("/cases/:caseId/jobs", (req, res, next) => {
         job.add(req, res, next);
       })
       .get("/jobs", (req, res, next) => {

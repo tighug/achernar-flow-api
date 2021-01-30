@@ -26,10 +26,9 @@ export class JobRepository implements IJobRepository {
   }
 
   process(
-    name: string,
     callback: ProcessCallbackFunction<{ caseId: number }>
-  ): void {
-    this.queue.process(name, callback);
+  ): Promise<void> {
+    return this.queue.process(callback);
   }
 
   on(event: string, callback: (...args: any) => void): Queue {
