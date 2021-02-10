@@ -49,6 +49,17 @@ export class CaseRepository implements ICaseRepository {
   }
 
   async delete(id: number): Promise<void> {
-    await this.prisma.case.delete({ where: { id } });
+    const deleteLoads = this.prisma.load.deleteMany({
+      where: {
+        caseId: id,
+      },
+    });
+    const deleteFlows = this.prisma.flow.deleteMany({
+      where: {
+        caseId: id,
+      },
+    });
+    const deleteCase = this.prisma.case.delete({ where: { id } });
+    await this.prisma.$transaction([deleteLoads, deleteFlows, deleteCase]);
   }
 }
