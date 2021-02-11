@@ -8,7 +8,6 @@ export class JobRepository implements IJobRepository {
 
   constructor(private readonly queue: Queue, private readonly wss: Server) {
     this.wss.on("connection", (ws) => {
-      ws.send("connected");
       this.connected.push(ws);
       ws.on(
         "close",
