@@ -1,6 +1,5 @@
 import { Bidder } from "../../domain/model/Bidder";
 import { DeepPartial } from "../../domain/model/DeepPartial";
-import { Load } from "../../domain/model/Load";
 import { NodeBaseRO } from "./NodeSerializer";
 import { BidCaseBaseRO } from "./BidCaseSerializer";
 
@@ -13,7 +12,7 @@ export class BidderSerializer {
     };
   }
 
-  private static serializeSingle(model: DeepPartial<Load>): BidderBaseRO {
+  private static serializeSingle(model: DeepPartial<Bidder>): BidderBaseRO {
     return { ...model };
   }
 }
