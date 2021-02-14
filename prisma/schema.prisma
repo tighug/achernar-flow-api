@@ -71,15 +71,15 @@ model Case {
 }
 
 model Flow {
-  id        Int     @id @default(autoincrement())
-  case      Case    @relation(fields: [caseId], references: [id])
+  id        Int    @id @default(autoincrement())
+  case      Case   @relation(fields: [caseId], references: [id])
   caseId    Int
-  line      Line    @relation(fields: [lineId], references: [id])
+  line      Line   @relation(fields: [lineId], references: [id])
   lineId    Int
   nextNodeP Float
   nextNodeV Float
   lineI     Float
-  before    Boolean
+  type      String
 }
 
 model Load {
@@ -120,4 +120,5 @@ model Bidder {
   price     Int
   volume    Int
   type      String
+  agreed    Int
 }
