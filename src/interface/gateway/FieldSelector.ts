@@ -170,6 +170,24 @@ export class FieldSelector {
       status,
     };
   }
+
+  static toBidder(fields: string[]): BidderSelect {
+    const id = !fields.length || fields.includes("id");
+    const bidCase = !fields.length || fields.includes("bidCase");
+    const node = !fields.length || fields.includes("node");
+    const price = !fields.length || fields.includes("price");
+    const volume = !fields.length || fields.includes("volume");
+    const type = !fields.length || fields.includes("type");
+
+    return {
+      id,
+      bidCase: bidCase ? { select: this.toBidCase(fields) } : false,
+      node: node ? { select: this.toNode(fields) } : false,
+      price,
+      volume,
+      type,
+    };
+  }
 }
 
 type FeederSelect = { id: boolean; networkNum: boolean; feederNum: boolean };
@@ -243,4 +261,12 @@ export type BidCaseSelect = {
   maxSellVolume: boolean;
   seed: boolean;
   status: boolean;
+};
+export type BidderSelect = {
+  id: boolean;
+  bidCase: boolean | { select: BidCaseSelect };
+  node: boolean | { select: NodeSelect };
+  price: boolean;
+  volume: boolean;
+  type: boolean;
 };
