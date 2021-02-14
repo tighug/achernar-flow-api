@@ -40,6 +40,9 @@ import { BidCaseGet } from "../usecase/bidCase/get/BidCaseGet";
 import { BidCaseList } from "../usecase/bidCase/list/BidCaseList";
 import { BidCaseDelete } from "../usecase/bidCase/delete/BidCaseDelete";
 import { BidCaseController } from "../interface/controller/BidCaseController";
+import { BidderRepository } from "../interface/gateway/BidderRepository";
+import { BidderList } from "../usecase/bidder/list/BidderList";
+import { BidderController } from "../interface/controller/BidderController";
 
 export const router = (
   prisma: PrismaClient,
@@ -55,6 +58,7 @@ export const router = (
   const flowRepository = new FlowRepository(prisma);
   const loadRepository = new LoadRepository(prisma);
   const bidCaseRepository = new BidCaseRepository(prisma);
+  const bidderRepository = new BidderRepository(prisma);
   const jobRepository = new JobRepository(queue, wss);
 
   // Service
@@ -81,6 +85,7 @@ export const router = (
   const bidCaseGet = new BidCaseGet(bidCaseRepository);
   const bidCaseList = new BidCaseList(bidCaseRepository);
   const bidCaseDelete = new BidCaseDelete(bidCaseRepository);
+  const bidderList = new BidderList(bidderRepository);
   const jobAdd = new JobAdd(
     loadService,
     flowService,
@@ -104,6 +109,7 @@ export const router = (
     bidCaseList,
     bidCaseDelete
   );
+  const bidder = new BidderController(bidderList);
   const job = new JobController(jobAdd, jobCount);
 
   return (
@@ -161,6 +167,9 @@ export const router = (
       })
       .delete("/bidCases/:id", (req, res, next) => {
         bidCase.delete(req, res, next);
+      })
+      .get("/bidCases/:bidCaseId/bidders", (req, res, next) => {
+        bidder.list(req, res, next);
       })
       .get("/jobs", (req, res, next) => {
         job.count(req, res, next);

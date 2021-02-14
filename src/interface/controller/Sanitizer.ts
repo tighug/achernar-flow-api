@@ -37,6 +37,17 @@ export class Sanitizer {
     return Number(caseId);
   }
 
+  static toBidCaseId(bidCaseId: any, required = true, init = 0): number {
+    const name = "bidCaseId";
+
+    if (required) this.checkNotEmpty(bidCaseId, name);
+    else if (bidCaseId === undefined) return init;
+
+    this.checkInt(String(bidCaseId), name);
+
+    return Number(bidCaseId);
+  }
+
   static toFields(fields: any, required = true, init = []): string[] {
     const name = "fields";
 

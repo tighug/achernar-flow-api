@@ -16,16 +16,17 @@ model Feeder {
 }
 
 model Node {
-  id        Int     @id @default(autoincrement())
-  feeder    Feeder  @relation(fields: [feederId], references: [id])
+  id        Int      @id @default(autoincrement())
+  feeder    Feeder   @relation(fields: [feederId], references: [id])
   feederId  Int
   num       Int
   posX      Float
   posY      Float
   hasLoad   Boolean
-  nextLines Line[]  @relation("PrevNode")
-  prevLines Line[]  @relation("NextNode")
+  nextLines Line[]   @relation("PrevNode")
+  prevLines Line[]   @relation("NextNode")
   loads     Load[]
+  bidders   Bidder[]
 }
 
 model Line {
@@ -92,8 +93,8 @@ model Load {
 }
 
 model BidCase {
-  id            Int    @id @default(autoincrement())
-  case          Case   @relation(fields: [caseId], references: [id])
+  id            Int      @id @default(autoincrement())
+  case          Case     @relation(fields: [caseId], references: [id])
   caseId        Int
   buyerCount    Int
   sellerCount   Int
@@ -107,4 +108,16 @@ model BidCase {
   maxSellVolume Int
   seed          Int
   status        String
+  bidders       Bidder[]
+}
+
+model Bidder {
+  id        Int     @id @default(autoincrement())
+  bidCase   BidCase @relation(fields: [bidCaseId], references: [id])
+  bidCaseId Int
+  node      Node    @relation(fields: [nodeId], references: [id])
+  nodeId    Int
+  price     Int
+  volume    Int
+  type      String
 }
