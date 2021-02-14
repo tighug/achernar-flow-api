@@ -3,6 +3,7 @@ import createHttpError from "http-errors";
 import { ICaseDelete } from "../../usecase/case/delete/ICaseDelete";
 import { ICaseGet } from "../../usecase/case/get/ICaseGet";
 import { ICaseList } from "../../usecase/case/list/ICaseList";
+import { ICaseQueue } from "../../usecase/case/queue/ICaseQueue";
 import { ICaseRegister } from "../../usecase/case/register/ICaseRegister";
 import { CaseSerializer } from "../serializer/CaseSerializer";
 import { Sanitizer } from "./Sanitizer";
@@ -12,7 +13,8 @@ export class CaseController {
     private readonly caseRegister: ICaseRegister,
     private readonly caseGet: ICaseGet,
     private readonly caseList: ICaseList,
-    private readonly caseDelete: ICaseDelete
+    private readonly caseDelete: ICaseDelete,
+    private readonly caseQueue: ICaseQueue
   ) {}
 
   async register(
@@ -98,6 +100,20 @@ export class CaseController {
       await this.caseDelete.handle(input);
 
       res.send();
+    } catch (err) {
+      next(err);
+    }
+  }
+
+  async queue(req: Request, res: Response, next: NextFunction): Promise<void> {
+    try {
+      const { id } = req.params;
+      const input = {
+        id: Sanitizer.toId(id),
+      };
+      const job = await this.caseQueue.handle(input);
+
+      res.json(job.toJSON());
     } catch (err) {
       next(err);
     }

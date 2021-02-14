@@ -18,7 +18,8 @@ const REDIS_PORT = process.env.REDIS_PORT || 6379;
 const app = express();
 const server = createServer(app);
 const prisma = new PrismaClient();
-const queue = new Bull("simulate", `redis://${REDIS_HOST}:${REDIS_PORT}`);
+const caseQueue = new Bull("case", `redis://${REDIS_HOST}:${REDIS_PORT}`);
+const bidCaseQueue = new Bull("bidCase", `redis://${REDIS_HOST}:${REDIS_PORT}`);
 const wss = new Server({ server });
 const errorController = new ErrorController();
 
@@ -26,7 +27,7 @@ app
   .use(cors())
   .use(express.json())
   .use(express.urlencoded({ extended: true }))
-  .use("/api", router(prisma, queue, wss))
+  .use("/api", router(prisma, caseQueue, bidCaseQueue, wss))
   .use((req, res, next) => {
     next(new createHttpError.NotFound("Requested API is not found."));
   })

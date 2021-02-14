@@ -1,5 +1,5 @@
 export type FlowListInput = Readonly<{
   caseId: number;
-  before: boolean;
+  type: string;
   fields?: string[];
 }>;

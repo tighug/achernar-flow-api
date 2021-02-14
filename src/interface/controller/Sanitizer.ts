@@ -278,15 +278,15 @@ export class Sanitizer {
     return Number(maxSellVolume);
   }
 
-  static toBefore(before: any, required = true, init = false): boolean {
-    const name = "before";
+  static toFlowType(type: any, required = true, init = "before"): string {
+    const name = "type";
 
-    if (required) this.checkNotEmpty(before, name);
-    else if (before === undefined) return init;
+    if (required) this.checkNotEmpty(type, name);
+    else if (type === undefined) return init;
 
-    this.checkBoolean(String(before), name);
+    this.checkString(String(type), name);
 
-    return Boolean(before);
+    return String(type);
   }
 
   private static checkNotEmpty(data: any, name: string) {

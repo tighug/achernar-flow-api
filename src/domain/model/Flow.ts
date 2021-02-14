@@ -8,9 +8,9 @@ export class Flow {
   nextNodeP: number;
   nextNodeV: number;
   lineI = 0;
-  before = true;
+  type = "before";
 
-  constructor(props: Omit<Flow, "before" | "lineI">) {
+  constructor(props: Omit<Flow, "type" | "lineI">) {
     this.case = props.case;
     this.line = props.line;
     this.nextNodeV = props.nextNodeV;

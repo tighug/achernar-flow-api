@@ -21,8 +21,6 @@ import { LoadRepository } from "../interface/gateway/LoadRepository";
 import { LoadList } from "../usecase/load/list/LoadList";
 import { LoadDelete } from "../usecase/load/delete/LoadDelete";
 import { JobRepository } from "../interface/gateway/JobRepository";
-import { JobAdd } from "../usecase/job/add/JobAdd";
-import { JobCount } from "../usecase/job/count/JobCount";
 import { FeederController } from "../interface/controller/FeederController";
 import { NodeController } from "../interface/controller/NodeController";
 import { LineController } from "../interface/controller/LineController";
@@ -30,7 +28,6 @@ import { SampleController } from "../interface/controller/SampleController";
 import { CaseController } from "../interface/controller/CaseController";
 import { FlowController } from "../interface/controller/FlowController";
 import { LoadController } from "../interface/controller/LoadController";
-import { JobController } from "../interface/controller/JobController";
 import { PrismaClient } from "@prisma/client";
 import { Queue } from "bull";
 import { Server } from "ws";
@@ -43,10 +40,16 @@ import { BidCaseController } from "../interface/controller/BidCaseController";
 import { BidderRepository } from "../interface/gateway/BidderRepository";
 import { BidderList } from "../usecase/bidder/list/BidderList";
 import { BidderController } from "../interface/controller/BidderController";
+import { CaseQueue } from "../usecase/case/queue/CaseQueue";
+import { NodalPriceRepository } from "../interface/gateway/NodalPriceRepository";
+import { NodalPriceList } from "../usecase/nodalPrice/list/NodalPriceList";
+import { NodalPriceController } from "../interface/controller/NodalPriceController";
+import { BidCaseQueue } from "../usecase/bidCase/queue/BidCaseQueue";
 
 export const router = (
   prisma: PrismaClient,
-  queue: Queue,
+  caseQueue: Queue,
+  bidCaseQueue: Queue,
   wss: Server
 ): Router => {
   // Repository
@@ -59,7 +62,8 @@ export const router = (
   const loadRepository = new LoadRepository(prisma);
   const bidCaseRepository = new BidCaseRepository(prisma);
   const bidderRepository = new BidderRepository(prisma);
-  const jobRepository = new JobRepository(queue, wss);
+  const nodalPriceRepository = new NodalPriceRepository(prisma);
+  const jobRepository = new JobRepository(caseQueue, bidCaseQueue, wss);
 
   // Service
   const loadService = new LoadService(sampleRepository, nodeRepository);
@@ -74,6 +78,14 @@ export const router = (
   const caseGet = new CaseGet(caseRepository);
   const caseList = new CaseList(caseRepository);
   const caseDelete = new CaseDelete(caseRepository);
+  const caseAddQueue = new CaseQueue(
+    caseRepository,
+    jobRepository,
+    loadService,
+    flowService,
+    flowRepository,
+    loadRepository
+  );
   const flowList = new FlowList(flowRepository);
   const flowDelete = new FlowDelete(flowRepository);
   const loadList = new LoadList(loadRepository);
@@ -85,32 +97,41 @@ export const router = (
   const bidCaseGet = new BidCaseGet(bidCaseRepository);
   const bidCaseList = new BidCaseList(bidCaseRepository);
   const bidCaseDelete = new BidCaseDelete(bidCaseRepository);
-  const bidderList = new BidderList(bidderRepository);
-  const jobAdd = new JobAdd(
-    loadService,
-    flowService,
+  const bidCaseAddQueue = new BidCaseQueue(
+    bidCaseRepository,
     jobRepository,
-    caseRepository,
+    loadRepository,
+    bidderRepository,
     flowRepository,
-    loadRepository
+    nodalPriceRepository,
+    flowService
   );
-  const jobCount = new JobCount(jobRepository);
+  const bidderList = new BidderList(bidderRepository);
+  const nodalPriceList = new NodalPriceList(nodalPriceRepository);
 
+  // Controller
   const feeder = new FeederController(feederList);
   const node = new NodeController(nodeList);
   const line = new LineController(lineList);
   const sample = new SampleController(sampleList);
-  const c = new CaseController(caseRegister, caseGet, caseList, caseDelete);
+  const c = new CaseController(
+    caseRegister,
+    caseGet,
+    caseList,
+    caseDelete,
+    caseAddQueue
+  );
   const flow = new FlowController(flowList, flowDelete);
   const load = new LoadController(loadList, loadDelete);
   const bidCase = new BidCaseController(
     bidCaseRegister,
     bidCaseGet,
     bidCaseList,
-    bidCaseDelete
+    bidCaseDelete,
+    bidCaseAddQueue
   );
   const bidder = new BidderController(bidderList);
-  const job = new JobController(jobAdd, jobCount);
+  const nodalPrice = new NodalPriceController(nodalPriceList);
 
   return (
     Router()
@@ -153,26 +174,33 @@ export const router = (
       .delete("/cases/:caseId/loads", (req, res, next) => {
         load.delete(req, res, next);
       })
-      .post("/cases/:caseId/jobs", (req, res, next) => {
-        job.add(req, res, next);
+      .post("/cases/:id/queue", (req, res, next) => {
+        c.queue(req, res, next);
       })
       .get("/cases/:caseId/bidCases", (req, res, next) => {
         bidCase.list(req, res, next);
       })
+      // Bid Cases
+      .get("/bidCases/:bidCaseId/bidders", (req, res, next) => {
+        bidder.list(req, res, next);
+      })
+      .get("/bidCases/:bidCaseId/bidders", (req, res, next) => {
+        bidder.list(req, res, next);
+      })
+      .get("/bidCases/:bidCaseId/nodalPrices", (req, res, next) => {
+        nodalPrice.list(req, res, next);
+      })
       .get("/bidCases/:id", (req, res, next) => {
         bidCase.list(req, res, next);
+      })
+      .post("/bidCases/:id/queue", (req, res, next) => {
+        bidCase.queue(req, res, next);
       })
       .post("/bidCases", (req, res, next) => {
         bidCase.register(req, res, next);
       })
       .delete("/bidCases/:id", (req, res, next) => {
         bidCase.delete(req, res, next);
-      })
-      .get("/bidCases/:bidCaseId/bidders", (req, res, next) => {
-        bidder.list(req, res, next);
-      })
-      .get("/jobs", (req, res, next) => {
-        job.count(req, res, next);
       })
   );
 };

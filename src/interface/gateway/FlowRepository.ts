@@ -7,6 +7,7 @@ import { FieldSelector } from "./FieldSelector";
 export class FlowRepository implements IFlowRepository {
   constructor(private readonly prisma: PrismaClient) {}
 
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   async save({ id, case: c, line, ...props }: Flow): Promise<Required<Flow>> {
     return await this.prisma.flow.create({
       data: {
@@ -33,7 +34,7 @@ export class FlowRepository implements IFlowRepository {
   async findMany(
     props: {
       caseId: number;
-      before: boolean;
+      type: string;
     },
     fields: string[] = []
   ): Promise<DeepPartial<Flow>[]> {

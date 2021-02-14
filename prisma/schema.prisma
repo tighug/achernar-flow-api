@@ -16,17 +16,18 @@ model Feeder {
 }
 
 model Node {
-  id        Int      @id @default(autoincrement())
-  feeder    Feeder   @relation(fields: [feederId], references: [id])
-  feederId  Int
-  num       Int
-  posX      Float
-  posY      Float
-  hasLoad   Boolean
-  nextLines Line[]   @relation("PrevNode")
-  prevLines Line[]   @relation("NextNode")
-  loads     Load[]
-  bidders   Bidder[]
+  id          Int          @id @default(autoincrement())
+  feeder      Feeder       @relation(fields: [feederId], references: [id])
+  feederId    Int
+  num         Int
+  posX        Float
+  posY        Float
+  hasLoad     Boolean
+  nextLines   Line[]       @relation("PrevNode")
+  prevLines   Line[]       @relation("NextNode")
+  loads       Load[]
+  bidders     Bidder[]
+  nodalPrices NodalPrice[]
 }
 
 model Line {
@@ -71,15 +72,15 @@ model Case {
 }
 
 model Flow {
-  id        Int     @id @default(autoincrement())
-  case      Case    @relation(fields: [caseId], references: [id])
+  id        Int    @id @default(autoincrement())
+  case      Case   @relation(fields: [caseId], references: [id])
   caseId    Int
-  line      Line    @relation(fields: [lineId], references: [id])
+  line      Line   @relation(fields: [lineId], references: [id])
   lineId    Int
   nextNodeP Float
   nextNodeV Float
   lineI     Float
-  before    Boolean
+  type      String
 }
 
 model Load {
@@ -93,8 +94,8 @@ model Load {
 }
 
 model BidCase {
-  id            Int      @id @default(autoincrement())
-  case          Case     @relation(fields: [caseId], references: [id])
+  id            Int          @id @default(autoincrement())
+  case          Case         @relation(fields: [caseId], references: [id])
   caseId        Int
   buyerCount    Int
   sellerCount   Int
@@ -109,6 +110,7 @@ model BidCase {
   seed          Int
   status        String
   bidders       Bidder[]
+  nodalPrices   NodalPrice[]
 }
 
 model Bidder {
@@ -120,4 +122,18 @@ model Bidder {
   price     Int
   volume    Int
   type      String
+  agreed    Int
+}
+
+model NodalPrice {
+  id        Int     @id @default(autoincrement())
+  bidCase   BidCase @relation(fields: [bidCaseId], references: [id])
+  bidCaseId Int
+  node      Node    @relation(fields: [nodeId], references: [id])
+  nodeId    Int
+  muIp      Float
+  muIn      Float
+  muVp      Float
+  muVn      Float
+  value     Float
 }
