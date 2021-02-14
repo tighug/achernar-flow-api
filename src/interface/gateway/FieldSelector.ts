@@ -136,6 +136,40 @@ export class FieldSelector {
       type,
     };
   }
+
+  static toBidCase(fields: string[]): BidCaseSelect {
+    const id = !fields.length || fields.includes("id");
+    const c = !fields.length || fields.includes("case");
+    const buyerCount = !fields.length || fields.includes("buyerCount");
+    const sellerCount = !fields.length || fields.includes("sellerCount");
+    const minBuyPrice = !fields.length || fields.includes("minBuyPrice");
+    const maxBuyPrice = !fields.length || fields.includes("maxBuyPrice");
+    const minSellPrice = !fields.length || fields.includes("minSellPrice");
+    const maxSellPrice = !fields.length || fields.includes("maxSellPrice");
+    const minBuyVolume = !fields.length || fields.includes("minBuyVolume");
+    const maxBuyVolume = !fields.length || fields.includes("maxBuyVolume");
+    const minSellVolume = !fields.length || fields.includes("minSellVolume");
+    const maxSellVolume = !fields.length || fields.includes("maxSellVolume");
+    const seed = !fields.length || fields.includes("seed");
+    const status = !fields.length || fields.includes("status");
+
+    return {
+      id,
+      case: c ? { select: this.toCase(fields) } : false,
+      buyerCount,
+      sellerCount,
+      minBuyPrice,
+      maxBuyPrice,
+      minSellPrice,
+      maxSellPrice,
+      minBuyVolume,
+      maxBuyVolume,
+      minSellVolume,
+      maxSellVolume,
+      seed,
+      status,
+    };
+  }
 }
 
 type FeederSelect = { id: boolean; networkNum: boolean; feederNum: boolean };
@@ -193,4 +227,20 @@ export type LoadSelect = {
   node: boolean | { select: NodeSelect };
   val: boolean;
   type: boolean;
+};
+export type BidCaseSelect = {
+  id: boolean;
+  case: boolean | { select: CaseSelect };
+  buyerCount: boolean;
+  sellerCount: boolean;
+  minBuyPrice: boolean;
+  maxBuyPrice: boolean;
+  minSellPrice: boolean;
+  maxSellPrice: boolean;
+  minBuyVolume: boolean;
+  maxBuyVolume: boolean;
+  minSellVolume: boolean;
+  maxSellVolume: boolean;
+  seed: boolean;
+  status: boolean;
 };

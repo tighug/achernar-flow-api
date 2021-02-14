@@ -1,4 +1,4 @@
-export type CaseRegisterInput = {
+export type CaseRegisterInput = Readonly<{
   feederId: number;
   hour: number;
   minute: number;
@@ -7,4 +7,4 @@ export type CaseRegisterInput = {
   loadScale: number;
   baseV: number;
   seed: number;
-};
+}>;
