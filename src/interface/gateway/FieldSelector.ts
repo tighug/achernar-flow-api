@@ -108,7 +108,7 @@ export class FieldSelector {
     const nextNodeP = !fields.length || fields.includes("nextNodeP");
     const nextNodeV = !fields.length || fields.includes("nextNodeV");
     const lineI = !fields.length || fields.includes("lineI");
-    const before = !fields.length || fields.includes("before");
+    const type = !fields.length || fields.includes("type");
 
     return {
       id,
@@ -117,7 +117,7 @@ export class FieldSelector {
       nextNodeP,
       nextNodeV,
       lineI,
-      before,
+      type,
     };
   }
 
@@ -190,6 +190,27 @@ export class FieldSelector {
       type,
     };
   }
+
+  static toNodalPrice(fields: string[]): NodalPriceSelect {
+    const id = !fields.length || fields.includes("id");
+    const bidCase = !fields.length || fields.includes("bidCase");
+    const node = !fields.length || fields.includes("node");
+    const muIp = !fields.length || fields.includes("muIp");
+    const muIn = !fields.length || fields.includes("muIn");
+    const muVp = !fields.length || fields.includes("muVp");
+    const muVn = !fields.length || fields.includes("muVn");
+    const value = !fields.length || fields.includes("value");
+
+    return {
+      id,
+      bidCase: bidCase ? { select: this.toBidCase(fields) } : false,
+      node: node ? { select: this.toNode(fields) } : false,
+      muIp,
+      muIn,
+      muVp,
+      muVn,
+      value,
+  }
 }
 
 type FeederSelect = { id: boolean; networkNum: boolean; feederNum: boolean };
@@ -239,7 +260,7 @@ export type FlowSelect = {
   nextNodeP: boolean;
   nextNodeV: boolean;
   lineI: boolean;
-  before: boolean;
+  type: boolean;
 };
 export type LoadSelect = {
   id: boolean;
@@ -272,4 +293,14 @@ export type BidderSelect = {
   volume: boolean;
   agreed: boolean;
   type: boolean;
+};
+export type NodalPriceSelect = {
+  id: boolean;
+  bidCase: boolean | { select: BidCaseSelect };
+  node: boolean | { select: NodeSelect };
+  muIp: boolean;
+  muIn: boolean;
+  muVp: boolean;
+  muVn: boolean;
+  value: boolean;
 };
