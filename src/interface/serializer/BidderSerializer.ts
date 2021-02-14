@@ -25,6 +25,7 @@ export type BidderBaseRO = Readonly<
     node: NodeBaseRO;
     price: number;
     volume: number;
+    agreed: number;
     type: string;
   }>
 >;

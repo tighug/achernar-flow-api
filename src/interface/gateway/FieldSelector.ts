@@ -177,6 +177,7 @@ export class FieldSelector {
     const node = !fields.length || fields.includes("node");
     const price = !fields.length || fields.includes("price");
     const volume = !fields.length || fields.includes("volume");
+    const agreed = !fields.length || fields.includes("agreed");
     const type = !fields.length || fields.includes("type");
 
     return {
@@ -185,6 +186,7 @@ export class FieldSelector {
       node: node ? { select: this.toNode(fields) } : false,
       price,
       volume,
+      agreed,
       type,
     };
   }
@@ -268,5 +270,6 @@ export type BidderSelect = {
   node: boolean | { select: NodeSelect };
   price: boolean;
   volume: boolean;
+  agreed: boolean;
   type: boolean;
 };
