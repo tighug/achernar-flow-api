@@ -1,3 +1,4 @@
+import { Bidder } from "../model/Bidder";
 import { Case } from "../model/Case";
 import { Flow } from "../model/Flow";
 import { Line } from "../model/Line";
@@ -9,19 +10,49 @@ const tolerance = 0.001;
 export class FlowService {
   constructor(private readonly lineRepository: ILineRepository) {}
 
-  async calc(c: Required<Case>, loads: Load[], pvs: Load[]): Promise<Flow[]> {
+  async calc(
+    c: Required<Case>,
+    loads: Load[],
+    pvs: Load[],
+    buyers: Bidder[] = [],
+    sellers: Bidder[] = [],
+    agreedPrice = 0,
+    gap = 0
+  ): Promise<Flow[]> {
     const lines = (await this.lineRepository.findMany(
       c.feeder.id
     )) as Required<Line>[];
+    buyers.forEach((b) => {
+      if (b.price >= agreedPrice) b.agreed = b.volume;
+    });
+    sellers.forEach((s) => {
+      if (s.price < agreedPrice) s.agreed = s.volume;
+    });
+    const modSellers = sellers.sort((a, b) => b.price - a.price);
+    for (let i = 0; gap > 0; i++) {
+      const diff = modSellers[i].agreed - gap;
+      if (diff >= 0) {
+        modSellers[i].agreed = diff;
+        gap = 0;
+      } else {
+        modSellers[i].agreed = 0;
+        gap = -diff;
+      }
+    }
     const flows = lines.map((l) => {
       const load = loads.find((load) => load.node.id === l.nextNode.id);
       const pv = pvs.find((pv) => pv.node.id === l.nextNode.id);
+      const buyer = buyers.find((b) => b.node.id === l.nextNode.id);
+      const seller = modSellers.find((s) => s.node.id === l.nextNode.id);
       const consumedKw = load === undefined ? 0 : load.val;
       const producedKw = pv === undefined ? 0 : pv.val;
+      const buyW = buyer === undefined ? 0 : buyer.agreed;
+      const sellW = seller === undefined ? 0 : seller.agreed;
+      const nextNodeP = (consumedKw - producedKw) * 1000 + buyW - sellW;
       return new Flow({
         case: c,
         line: l,
-        nextNodeP: (consumedKw - producedKw) * 1000,
+        nextNodeP,
         nextNodeV: c.baseV,
       });
     });

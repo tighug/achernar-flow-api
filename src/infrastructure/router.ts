@@ -41,6 +41,10 @@ import { BidderRepository } from "../interface/gateway/BidderRepository";
 import { BidderList } from "../usecase/bidder/list/BidderList";
 import { BidderController } from "../interface/controller/BidderController";
 import { CaseQueue } from "../usecase/case/queue/CaseQueue";
+import { NodalPriceRepository } from "../interface/gateway/NodalPriceRepository";
+import { NodalPriceList } from "../usecase/nodalPrice/list/NodalPriceList";
+import { NodalPriceController } from "../interface/controller/NodalPriceController";
+import { BidCaseQueue } from "../usecase/bidCase/queue/BidCaseQueue";
 
 export const router = (
   prisma: PrismaClient,
@@ -58,6 +62,7 @@ export const router = (
   const loadRepository = new LoadRepository(prisma);
   const bidCaseRepository = new BidCaseRepository(prisma);
   const bidderRepository = new BidderRepository(prisma);
+  const nodalPriceRepository = new NodalPriceRepository(prisma);
   const jobRepository = new JobRepository(caseQueue, bidCaseQueue, wss);
 
   // Service
@@ -92,7 +97,19 @@ export const router = (
   const bidCaseGet = new BidCaseGet(bidCaseRepository);
   const bidCaseList = new BidCaseList(bidCaseRepository);
   const bidCaseDelete = new BidCaseDelete(bidCaseRepository);
+  const bidCaseAddQueue = new BidCaseQueue(
+    bidCaseRepository,
+    jobRepository,
+    loadRepository,
+    bidderRepository,
+    flowRepository,
+    nodalPriceRepository,
+    flowService
+  );
   const bidderList = new BidderList(bidderRepository);
+  const nodalPriceList = new NodalPriceList(nodalPriceRepository);
+
+  // Controller
   const feeder = new FeederController(feederList);
   const node = new NodeController(nodeList);
   const line = new LineController(lineList);
@@ -110,9 +127,11 @@ export const router = (
     bidCaseRegister,
     bidCaseGet,
     bidCaseList,
-    bidCaseDelete
+    bidCaseDelete,
+    bidCaseAddQueue
   );
   const bidder = new BidderController(bidderList);
+  const nodalPrice = new NodalPriceController(nodalPriceList);
 
   return (
     Router()
@@ -161,17 +180,27 @@ export const router = (
       .get("/cases/:caseId/bidCases", (req, res, next) => {
         bidCase.list(req, res, next);
       })
+      // Bid Cases
+      .get("/bidCases/:bidCaseId/bidders", (req, res, next) => {
+        bidder.list(req, res, next);
+      })
+      .get("/bidCases/:bidCaseId/bidders", (req, res, next) => {
+        bidder.list(req, res, next);
+      })
+      .get("/bidCases/:bidCaseId/nodalPrices", (req, res, next) => {
+        nodalPrice.list(req, res, next);
+      })
       .get("/bidCases/:id", (req, res, next) => {
         bidCase.list(req, res, next);
+      })
+      .post("/bidCases/:id/queue", (req, res, next) => {
+        bidCase.queue(req, res, next);
       })
       .post("/bidCases", (req, res, next) => {
         bidCase.register(req, res, next);
       })
       .delete("/bidCases/:id", (req, res, next) => {
         bidCase.delete(req, res, next);
-      })
-      .get("/bidCases/:bidCaseId/bidders", (req, res, next) => {
-        bidder.list(req, res, next);
       })
   );
 };

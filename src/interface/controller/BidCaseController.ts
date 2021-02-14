@@ -3,6 +3,7 @@ import createHttpError from "http-errors";
 import { IBidCaseDelete } from "../../usecase/bidCase/delete/IBidCaseDelete";
 import { IBidCaseGet } from "../../usecase/bidCase/get/IBidCaseGet";
 import { IBidCaseList } from "../../usecase/bidCase/list/IBidCaseList";
+import { IBidCaseQueue } from "../../usecase/bidCase/queue/IBidCaseQueue";
 import { IBidCaseRegister } from "../../usecase/bidCase/register/IBidCaseRegister";
 import { BidCaseSerializer } from "../serializer/BidCaseSerializer";
 import { Sanitizer } from "./Sanitizer";
@@ -12,7 +13,8 @@ export class BidCaseController {
     private readonly bidCaseRegister: IBidCaseRegister,
     private readonly bidCaseGet: IBidCaseGet,
     private readonly bidCaseList: IBidCaseList,
-    private readonly bidCaseDelete: IBidCaseDelete
+    private readonly bidCaseDelete: IBidCaseDelete,
+    private readonly bidCaseQueue: IBidCaseQueue
   ) {}
 
   async register(
@@ -106,6 +108,20 @@ export class BidCaseController {
       await this.bidCaseDelete.handle(input);
 
       res.send();
+    } catch (err) {
+      next(err);
+    }
+  }
+
+  async queue(req: Request, res: Response, next: NextFunction): Promise<void> {
+    try {
+      const { id } = req.params;
+      const input = {
+        id: Sanitizer.toId(id),
+      };
+      const job = await this.bidCaseQueue.handle(input);
+
+      res.json(job.toJSON());
     } catch (err) {
       next(err);
     }

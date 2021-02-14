@@ -210,6 +210,7 @@ export class FieldSelector {
       muVp,
       muVn,
       value,
+    };
   }
 }
 
