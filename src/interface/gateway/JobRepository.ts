@@ -1,12 +1,17 @@
-import { JobCounts, ProcessCallbackFunction, Queue } from "bull";
+import { ProcessCallbackFunction, Queue } from "bull";
 import WebSocket, { Server } from "ws";
-import { SimulateJob } from "../../domain/model/SimulateJob";
+import { BidCaseJob } from "../../domain/model/BidCaseJob";
+import { CaseJob } from "../../domain/model/CaseJob";
 import { IJobRepository } from "../../domain/repository/IJobRepository";
 
 export class JobRepository implements IJobRepository {
   private connected: WebSocket[] = [];
 
-  constructor(private readonly queue: Queue, private readonly wss: Server) {
+  constructor(
+    private readonly caseQueue: Queue,
+    private readonly bidCaseQueue: Queue,
+    private readonly wss: Server
+  ) {
     this.wss.on("connection", (ws) => {
       this.connected.push(ws);
       ws.on(
@@ -16,25 +21,39 @@ export class JobRepository implements IJobRepository {
     });
   }
 
-  async add(caseId: number): Promise<SimulateJob> {
-    return await this.queue.add({ caseId });
+  addCaseJob(id: number): Promise<CaseJob> {
+    return this.caseQueue.add({ id });
   }
 
-  count(): Promise<JobCounts> {
-    return this.queue.getJobCounts();
+  addBidCaseJob(id: number): Promise<BidCaseJob> {
+    return this.bidCaseQueue.add({ id });
   }
 
-  process(
-    callback: ProcessCallbackFunction<{ caseId: number }>
+  processCaseJob(
+    callback: ProcessCallbackFunction<{ id: number }>
   ): Promise<void> {
-    return this.queue.process(callback);
+    return this.caseQueue.process(callback);
   }
 
-  on(event: string, callback: (...args: any) => void): Queue {
-    return this.queue.on(event, callback);
+  processBidCaseJob(
+    callback: ProcessCallbackFunction<{ id: number }>
+  ): Promise<void> {
+    return this.bidCaseQueue.process(callback);
   }
 
-  notify(id: number, status: string): void {
-    this.connected.forEach((ws) => ws.send(JSON.stringify({ id, status })));
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  onCaseJob(event: string, callback: (...args: any) => void): Queue {
+    return this.caseQueue.on(event, callback);
+  }
+
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  onBidCaseJob(event: string, callback: (...args: any) => void): Queue {
+    return this.bidCaseQueue.on(event, callback);
+  }
+
+  notify(type: string, id: number, status: string): void {
+    this.connected.forEach((ws) =>
+      ws.send(JSON.stringify({ type, id, status }))
+    );
   }
 }
