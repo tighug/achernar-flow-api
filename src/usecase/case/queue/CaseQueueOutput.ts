@@ -1,3 +1,3 @@
-import { Job } from "bull";
+import { CaseJob } from "../../../domain/model/CaseJob";
 
-export type CaseQueueOutput = Job;
+export type CaseQueueOutput = CaseJob;
