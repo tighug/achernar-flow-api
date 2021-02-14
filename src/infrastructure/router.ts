@@ -34,6 +34,12 @@ import { JobController } from "../interface/controller/JobController";
 import { PrismaClient } from "@prisma/client";
 import { Queue } from "bull";
 import { Server } from "ws";
+import { BidCaseRepository } from "../interface/gateway/BidCaseRepository";
+import { BidCaseRegister } from "../usecase/bidCase/register/BidCaseRegister";
+import { BidCaseGet } from "../usecase/bidCase/get/BidCaseGet";
+import { BidCaseList } from "../usecase/bidCase/list/BidCaseList";
+import { BidCaseDelete } from "../usecase/bidCase/delete/BidCaseDelete";
+import { BidCaseController } from "../interface/controller/BidCaseController";
 
 export const router = (
   prisma: PrismaClient,
@@ -48,6 +54,7 @@ export const router = (
   const caseRepository = new CaseRepository(prisma);
   const flowRepository = new FlowRepository(prisma);
   const loadRepository = new LoadRepository(prisma);
+  const bidCaseRepository = new BidCaseRepository(prisma);
   const jobRepository = new JobRepository(queue, wss);
 
   // Service
@@ -67,6 +74,13 @@ export const router = (
   const flowDelete = new FlowDelete(flowRepository);
   const loadList = new LoadList(loadRepository);
   const loadDelete = new LoadDelete(loadRepository);
+  const bidCaseRegister = new BidCaseRegister(
+    bidCaseRepository,
+    caseRepository
+  );
+  const bidCaseGet = new BidCaseGet(bidCaseRepository);
+  const bidCaseList = new BidCaseList(bidCaseRepository);
+  const bidCaseDelete = new BidCaseDelete(bidCaseRepository);
   const jobAdd = new JobAdd(
     loadService,
     flowService,
@@ -84,6 +98,12 @@ export const router = (
   const c = new CaseController(caseRegister, caseGet, caseList, caseDelete);
   const flow = new FlowController(flowList, flowDelete);
   const load = new LoadController(loadList, loadDelete);
+  const bidCase = new BidCaseController(
+    bidCaseRegister,
+    bidCaseGet,
+    bidCaseList,
+    bidCaseDelete
+  );
   const job = new JobController(jobAdd, jobCount);
 
   return (
@@ -129,6 +149,18 @@ export const router = (
       })
       .post("/cases/:caseId/jobs", (req, res, next) => {
         job.add(req, res, next);
+      })
+      .get("/cases/:caseId/bidCases", (req, res, next) => {
+        bidCase.list(req, res, next);
+      })
+      .get("/bidCases/:id", (req, res, next) => {
+        bidCase.list(req, res, next);
+      })
+      .post("/bidCases", (req, res, next) => {
+        bidCase.register(req, res, next);
+      })
+      .delete("/bidCases/:id", (req, res, next) => {
+        bidCase.delete(req, res, next);
       })
       .get("/jobs", (req, res, next) => {
         job.count(req, res, next);

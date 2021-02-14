@@ -53,8 +53,8 @@ model Sample {
 }
 
 model Case {
-  id        Int    @id @default(autoincrement())
-  feeder    Feeder @relation(fields: [feederId], references: [id])
+  id        Int       @id @default(autoincrement())
+  feeder    Feeder    @relation(fields: [feederId], references: [id])
   feederId  Int
   hour      Int
   minute    Int
@@ -66,6 +66,7 @@ model Case {
   status    String
   flows     Flow[]
   loads     Load[]
+  bidCases  BidCase[]
 }
 
 model Flow {
@@ -88,4 +89,22 @@ model Load {
   nodeId Int
   val    Float
   type   String
+}
+
+model BidCase {
+  id            Int    @id @default(autoincrement())
+  case          Case   @relation(fields: [caseId], references: [id])
+  caseId        Int
+  buyerCount    Int
+  sellerCount   Int
+  minBuyPrice   Int
+  maxBuyPrice   Int
+  minSellPrice  Int
+  maxSellPrice  Int
+  minBuyVolume  Int
+  maxBuyVolume  Int
+  minSellVolume Int
+  maxSellVolume Int
+  seed          Int
+  status        String
 }

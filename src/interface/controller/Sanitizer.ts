@@ -149,6 +149,124 @@ export class Sanitizer {
     return Number(seed);
   }
 
+  static toBuyerCount(buyerCount: any, required = true, init = 0): number {
+    const name = "buyerCount";
+
+    if (required) this.checkNotEmpty(buyerCount, name);
+    else if (buyerCount === undefined) return init;
+
+    this.checkInt(String(buyerCount), name);
+
+    return Number(buyerCount);
+  }
+
+  static toSellerCount(sellerCount: any, required = true, init = 0): number {
+    const name = "sellerCount";
+
+    if (required) this.checkNotEmpty(sellerCount, name);
+    else if (sellerCount === undefined) return init;
+
+    this.checkInt(String(sellerCount), name);
+
+    return Number(sellerCount);
+  }
+
+  static toMinBuyPrice(minBuyPrice: any, required = true, init = 0): number {
+    const name = "minBuyPrice";
+
+    if (required) this.checkNotEmpty(minBuyPrice, name);
+    else if (minBuyPrice === undefined) return init;
+
+    this.checkInt(String(minBuyPrice), name);
+
+    return Number(minBuyPrice);
+  }
+
+  static toMaxBuyPrice(maxBuyPrice: any, required = true, init = 0): number {
+    const name = "maxBuyPrice";
+
+    if (required) this.checkNotEmpty(maxBuyPrice, name);
+    else if (maxBuyPrice === undefined) return init;
+
+    this.checkInt(String(maxBuyPrice), name);
+
+    return Number(maxBuyPrice);
+  }
+
+  static toMinSellPrice(minSellPrice: any, required = true, init = 0): number {
+    const name = "minSellPrice";
+
+    if (required) this.checkNotEmpty(minSellPrice, name);
+    else if (minSellPrice === undefined) return init;
+
+    this.checkInt(String(minSellPrice), name);
+
+    return Number(minSellPrice);
+  }
+
+  static toMaxSellPrice(maxSellPrice: any, required = true, init = 0): number {
+    const name = "maxSellPrice";
+
+    if (required) this.checkNotEmpty(maxSellPrice, name);
+    else if (maxSellPrice === undefined) return init;
+
+    this.checkInt(String(maxSellPrice), name);
+
+    return Number(maxSellPrice);
+  }
+
+  static toMinBuyVolume(minBuyVolume: any, required = true, init = 0): number {
+    const name = "minBuyVolume";
+
+    if (required) this.checkNotEmpty(minBuyVolume, name);
+    else if (minBuyVolume === undefined) return init;
+
+    this.checkInt(String(minBuyVolume), name);
+
+    return Number(minBuyVolume);
+  }
+
+  static toMaxBuyVolume(maxBuyVolume: any, required = true, init = 0): number {
+    const name = "maxBuyVolume";
+
+    if (required) this.checkNotEmpty(maxBuyVolume, name);
+    else if (maxBuyVolume === undefined) return init;
+
+    this.checkInt(String(maxBuyVolume), name);
+
+    return Number(maxBuyVolume);
+  }
+
+  static toMinSellVolume(
+    minSellVolume: any,
+    required = true,
+    init = 0
+  ): number {
+    const name = "minSellVolume";
+
+    if (required) this.checkNotEmpty(minSellVolume, name);
+    else if (minSellVolume === undefined) return init;
+
+    this.checkInt(String(minSellVolume), name);
+
+    return Number(minSellVolume);
+  }
+
+  static toMaxSellVolume(
+    maxSellVolume: any,
+    required = true,
+    init = 0
+  ): number {
+    const name = "maxSellVolume";
+
+    if (required) this.checkNotEmpty(maxSellVolume, name);
+    else if (maxSellVolume === undefined) return init;
+
+    this.checkInt(String(maxSellVolume), name);
+
+    return Number(maxSellVolume);
+  }
+
   static toBefore(before: any, required = true, init = false): boolean {
     const name = "before";
 
