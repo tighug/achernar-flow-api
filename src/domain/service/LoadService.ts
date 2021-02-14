@@ -5,6 +5,7 @@ import { Random } from "./Random";
 import { Node } from "../model/Node";
 import { Sample } from "../model/Sample";
 import { Case } from "../model/Case";
+import { shuffleArray } from "./shuffleArray";
 
 export class LoadService {
   constructor(
@@ -43,7 +44,7 @@ export class LoadService {
           type: "load",
         })
     );
-    const shuffledHouses = this.shuffle(houses);
+    const shuffledHouses = shuffleArray(houses, rand);
     const pvs = Array.from(
       Array(pvCount),
       () => pvSamples[rand.getBetween(0, pvSamples.length - 1)]
@@ -58,13 +59,5 @@ export class LoadService {
     );
 
     return [loads, pvs];
-  }
-
-  private shuffle([...array]) {
-    for (let i = array.length - 1; i >= 0; i--) {
-      const j = Math.floor(Math.random() * (i + 1));
-      [array[i], array[j]] = [array[j], array[i]];
-    }
-    return array;
   }
 }
