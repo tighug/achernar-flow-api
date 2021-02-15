@@ -1,5 +1,5 @@
 export type BidderListInput = Readonly<{
   bidCaseId: number;
-  type: string;
+  type?: string;
   fields?: string[];
 }>;
