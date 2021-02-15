@@ -29,6 +29,7 @@ export class FlowService {
       if (s.price < agreedPrice) s.agreed = s.volume;
     });
     const modSellers = sellers.sort((a, b) => b.price - a.price);
+    gap = -gap;
     for (let i = 0; gap > 0; i++) {
       const diff = modSellers[i].agreed - gap;
       if (diff >= 0) {
