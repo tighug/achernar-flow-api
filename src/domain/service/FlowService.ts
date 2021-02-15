@@ -49,7 +49,8 @@ export class FlowService {
       const producedKw = pv === undefined ? 0 : pv.val;
       const buyW = buyer === undefined ? 0 : buyer.agreed;
       const sellW = seller === undefined ? 0 : seller.agreed;
-      const nextNodeP = (consumedKw - producedKw) * 1000 + buyW - sellW;
+      const nextNodeP =
+        seller === undefined ? (consumedKw - producedKw) * 1000 + buyW : -sellW;
       return new Flow({
         case: c,
         line: l,
