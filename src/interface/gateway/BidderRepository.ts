@@ -30,8 +30,12 @@ export class BidderRepository implements IBidderRepository {
     props: { bidCaseId: number; type?: string },
     fields: string[] = []
   ): Promise<DeepPartial<Bidder>[]> {
+    console.log(props);
+    const query = props.type
+      ? { bidCaseId: props.bidCaseId, type: props.type }
+      : { bidCaseId: props.bidCaseId };
     return this.prisma.bidder.findMany({
-      where: props,
+      where: query,
       select: FieldSelector.toBidder(fields),
     });
   }

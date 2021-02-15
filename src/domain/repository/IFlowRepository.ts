@@ -4,7 +4,7 @@ import { Flow } from "../model/Flow";
 export interface IFlowRepository {
   save(flow: Flow): Promise<Required<Flow>>;
   findMany(
-    props: { caseId: number; bidCaseId?: number; type: string },
+    props: { caseId: number; bidCaseId: number; type: string },
     fields?: string[]
   ): Promise<DeepPartial<Flow>[]>;
   deleteMany(caseId: number): Promise<void>;
