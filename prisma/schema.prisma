@@ -81,6 +81,7 @@ model Flow {
   nextNodeV Float
   lineI     Float
   type      String
+  bidCaseId Int
 }
 
 model Load {

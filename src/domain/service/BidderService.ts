@@ -61,10 +61,8 @@ export class BidderService {
     sellers: Bidder[],
     nodalPrices: NodalPrice[]
   ): [number, number] {
-    let agreedPrice = 0;
     let gap = 100000000; // Big number
-
-    for (agreedPrice = 0; gap <= 0; agreedPrice += priceStep) {
+    for (let agreedPrice = 0; ; agreedPrice += priceStep) {
       const buyAgreedSum = this.getBuyAgreedSum(
         buyers,
         agreedPrice,
@@ -76,10 +74,10 @@ export class BidderService {
         nodalPrices
       );
 
-      gap = sellAgreedSum - buyAgreedSum;
-    }
+      gap = buyAgreedSum - sellAgreedSum;
 
-    return [agreedPrice, gap];
+      if (gap <= 0) return [agreedPrice, gap];
+    }
   }
 
   private static getBuyAgreedSum(

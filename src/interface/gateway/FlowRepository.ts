@@ -34,6 +34,7 @@ export class FlowRepository implements IFlowRepository {
   async findMany(
     props: {
       caseId: number;
+      bidCaseId?: number;
       type: string;
     },
     fields: string[] = []

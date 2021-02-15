@@ -13,9 +13,10 @@ export class FlowController {
   async list(req: Request, res: Response, next: NextFunction): Promise<void> {
     try {
       const { caseId } = req.params;
-      const { type, fields } = req.query;
+      const { bidCaseId, type, fields } = req.query;
       const input = {
         caseId: Sanitizer.toCaseId(caseId),
+        bidCaseId: Sanitizer.toBidCaseId(bidCaseId, false),
         type: Sanitizer.toFlowType(type),
         fields: Sanitizer.toFields(fields, false),
       };

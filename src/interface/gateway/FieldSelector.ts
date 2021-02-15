@@ -109,6 +109,7 @@ export class FieldSelector {
     const nextNodeV = !fields.length || fields.includes("nextNodeV");
     const lineI = !fields.length || fields.includes("lineI");
     const type = !fields.length || fields.includes("type");
+    const bidCaseId = !fields.length || fields.includes("bidCaseId");
 
     return {
       id,
@@ -118,6 +119,7 @@ export class FieldSelector {
       nextNodeV,
       lineI,
       type,
+      bidCaseId,
     };
   }
 
@@ -262,6 +264,7 @@ export type FlowSelect = {
   nextNodeV: boolean;
   lineI: boolean;
   type: boolean;
+  bidCaseId: boolean;
 };
 export type LoadSelect = {
   id: boolean;
