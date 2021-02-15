@@ -16,7 +16,7 @@ export class FlowController {
       const { bidCaseId, type, fields } = req.query;
       const input = {
         caseId: Sanitizer.toCaseId(caseId),
-        bidCaseId: Sanitizer.toBidCaseId(bidCaseId, false),
+        bidCaseId: Sanitizer.toBidCaseId(bidCaseId, false, 0),
         type: Sanitizer.toFlowType(type),
         fields: Sanitizer.toFields(fields, false),
       };

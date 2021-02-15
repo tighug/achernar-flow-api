@@ -12,7 +12,7 @@ export class BidderController {
       const { type, fields } = req.query;
       const input = {
         bidCaseId: Sanitizer.toBidCaseId(bidCaseId),
-        type: Sanitizer.toFlowType(type, false),
+        type: Sanitizer.toFlowType(type, false, ""),
         fields: Sanitizer.toFields(fields, false),
       };
       const bidders = await this.bidderList.handle(input);
