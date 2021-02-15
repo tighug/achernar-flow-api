@@ -35,7 +35,7 @@ export class BidCaseQueue implements IBidCaseQueue {
         )) as Required<BidCase>;
         const flows = (await this.flowRepository.findMany({
           caseId: bidCase.case.id as number,
-          bidCaseId: bidCase.id,
+          bidCaseId: 0,
           type: "before",
         })) as Flow[];
         const loads = (await this.loadRepository.findMany({
