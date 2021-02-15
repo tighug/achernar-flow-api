@@ -67,24 +67,28 @@ export class BidCaseQueue implements IBidCaseQueue {
           );
 
           if (i === 0) {
-            flows.forEach(async (f) => {
-              f.type = "after";
-              await this.flowRepository.save(f);
-            });
+            for (let i = 0; i < flows.length; i++) {
+              flows[i].type = "after";
+              await this.flowRepository.save(flows[i]);
+            }
           }
 
           if (flows.every((f) => f.nextNodeV <= 253 && f.nextNodeV >= 216.2)) {
             console.log(i);
-            buyers.forEach(async (b) => await this.bidderRepository.save(b));
-            sellers.forEach(async (s) => await this.bidderRepository.save(s));
-            nodalPrices.forEach(
-              async (np) => await this.nodalPriceRepository.save(np)
-            );
+            for (let i = 0; i < buyers.length; i++) {
+              await this.bidderRepository.save(buyers[i]);
+            }
+            for (let i = 0; i < sellers.length; i++) {
+              await this.bidderRepository.save(sellers[i]);
+            }
+            for (let i = 0; i < nodalPrices.length; i++) {
+              await this.nodalPriceRepository.save(nodalPrices[i]);
+            }
             if (i !== 0)
-              flows.forEach(async (f) => {
-                f.type = "fixed";
-                await this.flowRepository.save(f);
-              });
+              for (let i = 0; i < flows.length; i++) {
+                flows[i].type = "fixed";
+                await this.flowRepository.save(flows[i]);
+              }
             break;
           }
 
@@ -98,16 +102,16 @@ export class BidCaseQueue implements IBidCaseQueue {
     });
 
     this.jobRepository.onBidCaseJob("active", async ({ data }: BidCaseJob) => {
-      this.updateAndNotify(data.id, "active");
+      await this.updateAndNotify(data.id, "active");
     });
     this.jobRepository.onBidCaseJob(
       "completed",
       async ({ data }: BidCaseJob) => {
-        this.updateAndNotify(data.id, "completed");
+        await this.updateAndNotify(data.id, "completed");
       }
     );
     this.jobRepository.onBidCaseJob("failed", async ({ data }: BidCaseJob) => {
-      this.updateAndNotify(data.id, "failed");
+      await this.updateAndNotify(data.id, "failed");
     });
   }
 
@@ -121,7 +125,7 @@ export class BidCaseQueue implements IBidCaseQueue {
         "This bidCase has already been queued."
       );
 
-    return this.jobRepository.addBidCaseJob(id);
+    return await this.jobRepository.addBidCaseJob(id);
   }
 
   private async updateAndNotify(id: number, status: string): Promise<void> {

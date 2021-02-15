@@ -28,22 +28,28 @@ export class CaseQueue implements ICaseQueue {
         const [loads, pvs] = await this.loadService.getLoadsAndPVs(c);
         const flows = await this.flowService.calc(c, loads, pvs);
 
-        flows.forEach(async (f) => await this.flowRepository.save(f));
-        loads.forEach(async (l) => await this.loadRepository.save(l));
-        pvs.forEach(async (pv) => await this.loadRepository.save(pv));
+        for (let i = 0; i < flows.length; i++) {
+          await this.flowRepository.save(flows[i]);
+        }
+        for (let i = 0; i < loads.length; i++) {
+          await this.loadRepository.save(loads[i]);
+        }
+        for (let i = 0; i < pvs.length; i++) {
+          await this.loadRepository.save(pvs[i]);
+        }
       } catch (err) {
         console.error(err);
         return err;
       }
     });
     this.jobRepository.onCaseJob("active", async ({ data }: CaseJob) => {
-      this.updateAndNotify(data.id, "active");
+      await this.updateAndNotify(data.id, "active");
     });
     this.jobRepository.onCaseJob("completed", async ({ data }: CaseJob) => {
-      this.updateAndNotify(data.id, "completed");
+      await this.updateAndNotify(data.id, "completed");
     });
     this.jobRepository.onCaseJob("failed", async ({ data }: CaseJob) => {
-      this.updateAndNotify(data.id, "failed");
+      await this.updateAndNotify(data.id, "failed");
     });
   }
 
@@ -54,7 +60,7 @@ export class CaseQueue implements ICaseQueue {
     if (c.status !== "waiting")
       throw new createHttpError.Conflict("This case has already been queued.");
 
-    return this.jobRepository.addCaseJob(id);
+    return await this.jobRepository.addCaseJob(id);
   }
 
   private async updateAndNotify(id: number, status: string): Promise<void> {
