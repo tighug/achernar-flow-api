@@ -109,7 +109,7 @@ model BidCase {
   minSellVolume Int
   maxSellVolume Int
   seed          Int
-  agreedPrice   Int
+  agreedPrice   Float
   status        String
   bidders       Bidder[]
   nodalPrices   NodalPrice[]
