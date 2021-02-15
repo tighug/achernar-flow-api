@@ -22,8 +22,6 @@ export class BidderService {
       maxBuyVolume,
       minSellPrice,
       maxSellPrice,
-      minSellVolume,
-      maxSellVolume,
       seed,
     } = bidCase;
 
@@ -31,8 +29,13 @@ export class BidderService {
     const modLoads = loads.filter(
       (l) => pvs.findIndex((pv) => pv.node.id === l.node.id) < 0
     );
+    const modPVs = pvs.filter((pv) => {
+      const matchedLoad = loads.find((l) => l.node.id === pv.node.id);
+      if (matchedLoad === undefined) throw new Error("load is missing.");
+      return pv.val - matchedLoad.val > 0;
+    });
     const shuffledLoads = shuffleArray(modLoads, rand);
-    const shuffledPVs = shuffleArray(pvs, rand);
+    const shuffledPVs = shuffleArray(modPVs, rand);
     const buyers = Array.from(Array(buyerCount).keys()).map(
       (i) =>
         new Bidder({
@@ -43,16 +46,20 @@ export class BidderService {
           type: "buyer",
         })
     );
-    const sellers = Array.from(Array(sellerCount).keys()).map(
-      (i) =>
-        new Bidder({
-          bidCase,
-          node: shuffledPVs[i].node,
-          price: rand.getBetween(minSellPrice, maxSellPrice),
-          volume: rand.getBetween(minSellVolume, maxSellVolume),
-          type: "seller",
-        })
-    );
+    const sellers = Array.from(Array(sellerCount).keys()).map((i) => {
+      const matchedLoad = loads.find(
+        (l) => l.node.id === shuffledPVs[i].node.id
+      );
+      if (matchedLoad === undefined) throw new Error("load is missing.");
+
+      return new Bidder({
+        bidCase,
+        node: shuffledPVs[i].node,
+        price: rand.getBetween(minSellPrice, maxSellPrice),
+        volume: shuffledPVs[i].val - matchedLoad.val,
+        type: "seller",
+      });
+    });
     return [buyers, sellers];
   }
 
