@@ -51,9 +51,9 @@ export class JobRepository implements IJobRepository {
     return this.bidCaseQueue.on(event, callback);
   }
 
-  notify(type: string, id: number, status: string): void {
+  notify(type: string, id: number, status: string, agreedPrice?: number): void {
     this.connected.forEach((ws) =>
-      ws.send(JSON.stringify({ type, id, status }))
+      ws.send(JSON.stringify({ type, id, status, agreedPrice }))
     );
   }
 }

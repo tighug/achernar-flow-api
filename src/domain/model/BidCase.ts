@@ -14,9 +14,10 @@ export class BidCase {
   readonly minSellVolume: number;
   readonly maxSellVolume: number;
   readonly seed: number;
+  agreedPrice = 0;
   status = "waiting";
 
-  constructor(props: Omit<BidCase, "id" | "status">) {
+  constructor(props: Omit<BidCase, "id" | "status" | "agreedPrice">) {
     this.case = props.case;
     this.buyerCount = props.buyerCount;
     this.sellerCount = props.sellerCount;
