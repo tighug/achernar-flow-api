@@ -15,5 +15,5 @@ export interface IJobRepository {
   onCaseJob(event: string, callback: (...args: any) => void): Queue;
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   onBidCaseJob(event: string, callback: (...args: any) => void): Queue;
-  notify(type: string, id: number, status: string): void;
+  notify(type: string, id: number, status: string, agreedPrice?: number): void;
 }

@@ -153,6 +153,7 @@ export class FieldSelector {
     const minSellVolume = !fields.length || fields.includes("minSellVolume");
     const maxSellVolume = !fields.length || fields.includes("maxSellVolume");
     const seed = !fields.length || fields.includes("seed");
+    const agreedPrice = !fields.length || fields.includes("agreedPrice");
     const status = !fields.length || fields.includes("status");
 
     return {
@@ -169,6 +170,7 @@ export class FieldSelector {
       minSellVolume,
       maxSellVolume,
       seed,
+      agreedPrice,
       status,
     };
   }
@@ -287,6 +289,7 @@ export type BidCaseSelect = {
   minSellVolume: boolean;
   maxSellVolume: boolean;
   seed: boolean;
+  agreedPrice: boolean;
   status: boolean;
 };
 export type BidderSelect = {

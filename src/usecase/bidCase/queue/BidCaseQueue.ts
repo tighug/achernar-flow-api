@@ -2,6 +2,7 @@ import createHttpError from "http-errors";
 import { BidCase } from "../../../domain/model/BidCase";
 import { BidCaseJob } from "../../../domain/model/BidCaseJob";
 import { Case } from "../../../domain/model/Case";
+import { Flow } from "../../../domain/model/Flow";
 import { Load } from "../../../domain/model/Load";
 import { NodalPrice } from "../../../domain/model/NodalPrice";
 import { IBidCaseRepository } from "../../../domain/repository/IBidCaseRepository";
@@ -32,6 +33,11 @@ export class BidCaseQueue implements IBidCaseQueue {
         const bidCase = (await this.bidCaseRepository.findOne(
           data.id
         )) as Required<BidCase>;
+        const flows = (await this.flowRepository.findMany({
+          caseId: bidCase.case.id as number,
+          bidCaseId: bidCase.id,
+          type: "before",
+        })) as Flow[];
         const loads = (await this.loadRepository.findMany({
           caseId: bidCase.case.id as number,
           type: "load",
@@ -46,10 +52,9 @@ export class BidCaseQueue implements IBidCaseQueue {
           pvs
         );
 
-        const nodalPrices = [
-          ...buyers.map((b) => new NodalPrice({ bidCase, node: b.node })),
-          ...sellers.map((s) => new NodalPrice({ bidCase, node: s.node })),
-        ];
+        const nodalPrices = flows.map(
+          (f) => new NodalPrice({ bidCase, node: f.line.nextNode })
+        );
         for (let i = 0; ; i++) {
           const [agreedPrice, gap] = BidderService.calcAgreedPrice(
             buyers,
@@ -91,6 +96,12 @@ export class BidCaseQueue implements IBidCaseQueue {
                 flows[i].bidCaseId = bidCase.id;
                 await this.flowRepository.save(flows[i]);
               }
+            await this.bidCaseRepository.update(
+              bidCase.id,
+              "completed",
+              agreedPrice
+            );
+
             break;
           }
 
@@ -104,16 +115,18 @@ export class BidCaseQueue implements IBidCaseQueue {
     });
 
     this.jobRepository.onBidCaseJob("active", async ({ data }: BidCaseJob) => {
-      await this.updateAndNotify(data.id, "active");
+      await this.bidCaseRepository.update(data.id, "active", 0);
+      this.jobRepository.notify("bidCase", data.id, "active", 0);
     });
     this.jobRepository.onBidCaseJob(
       "completed",
       async ({ data }: BidCaseJob) => {
-        await this.updateAndNotify(data.id, "completed");
+        this.jobRepository.notify("bidCase", data.id, "completed", 0);
       }
     );
     this.jobRepository.onBidCaseJob("failed", async ({ data }: BidCaseJob) => {
-      await this.updateAndNotify(data.id, "failed");
+      await this.bidCaseRepository.update(data.id, "failed", 0);
+      this.jobRepository.notify("bidCase", data.id, "failed", 0);
     });
   }
 
@@ -128,10 +141,5 @@ export class BidCaseQueue implements IBidCaseQueue {
       );
 
     return await this.jobRepository.addBidCaseJob(id);
-  }
-
-  private async updateAndNotify(id: number, status: string): Promise<void> {
-    await this.bidCaseRepository.update(id, status);
-    this.jobRepository.notify("bidCase", id, status);
   }
 }

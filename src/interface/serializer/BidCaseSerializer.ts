@@ -35,6 +35,7 @@ export type BidCaseBaseRO = Readonly<
     minSellVolume: number;
     maxSellVolume: number;
     seed: number;
+    agreedPrice: number;
     status: string;
   }>
 >;
