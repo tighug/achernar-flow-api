@@ -9,8 +9,9 @@ export class Flow {
   nextNodeV: number;
   lineI = 0;
   type = "before";
+  bidCaseId = 0; // To filter only
 
-  constructor(props: Omit<Flow, "type" | "lineI">) {
+  constructor(props: Omit<Flow, "type" | "lineI" | "bidCaseId">) {
     this.case = props.case;
     this.line = props.line;
     this.nextNodeV = props.nextNodeV;
