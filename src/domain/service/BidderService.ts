@@ -56,7 +56,7 @@ export class BidderService {
         bidCase,
         node: shuffledPVs[i].node,
         price: rand.getBetween(minSellPrice, maxSellPrice),
-        volume: shuffledPVs[i].val - matchedLoad.val,
+        volume: Math.floor((shuffledPVs[i].val - matchedLoad.val) * 1000),
         type: "seller",
       });
     });
