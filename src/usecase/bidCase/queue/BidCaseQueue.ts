@@ -74,7 +74,7 @@ export class BidCaseQueue implements IBidCaseQueue {
           if (i === 0) {
             for (let i = 0; i < flows.length; i++) {
               flows[i].type = "after";
-              flows[i].bidCaseId = bidCase.id;
+              flows[i].bidCaseId = data.id;
               await this.flowRepository.save(flows[i]);
             }
           }
@@ -93,7 +93,7 @@ export class BidCaseQueue implements IBidCaseQueue {
             if (i !== 0)
               for (let i = 0; i < flows.length; i++) {
                 flows[i].type = "fixed";
-                flows[i].bidCaseId = bidCase.id;
+                flows[i].bidCaseId = data.id;
                 await this.flowRepository.save(flows[i]);
               }
             await this.bidCaseRepository.update(
